@@ -108,8 +108,7 @@
       "name": "@opencode/cli",
       "version": "2.3.0",
       "bin": {
-        "opencode": "./bin/opencode.cjs",
-        "opencode2": "./bin/opencode2.cjs",
+        "blackbird": "./bin/opencode.cjs",
       },
       "dependencies": {
         "@agentclientprotocol/sdk": "1.6.0",
