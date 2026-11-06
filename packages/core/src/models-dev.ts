@@ -542,6 +542,8 @@ export const layer = (options?: Options) =>
   Layer.effect(
     Service,
     Effect.gen(function* () {
+      // blackbird: no models catalog (no fetch, no bundled snapshot); models come only from config.
+      if (true as boolean) return Service.of({ get: () => Effect.succeed([]), refresh: () => Effect.void })
       const fs = yield* FSUtil.Service
       const bus = yield* Bus.Service
       const app = yield* App.Service

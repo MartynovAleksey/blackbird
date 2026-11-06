@@ -258,8 +258,8 @@ const pre = [
   GoalPlugin.Plugin,
   SkillPlugin.Plugin,
   VcsHgPlugin.Plugin,
-  ModelsDevPlugin,
-  ...ProviderPlugins,
+  // blackbird: no models.dev catalog (ModelsDevPlugin)
+  // blackbird: no built-in providers (...ProviderPlugins)
   ...WebSearchPlugins,
   PatchTool.Plugin,
   // Render model prompts after the patch plugin selects the available editing tools.
@@ -331,3 +331,6 @@ export const list = Effect.fn("PluginInternal.list")(function* () {
     post: resolve(post),
   }
 })
+
+// blackbird: keep the upstream imports referenced so the list edits above stay one-line merges.
+void [ModelsDevPlugin, ProviderPlugins]
