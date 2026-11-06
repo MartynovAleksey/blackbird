@@ -1,3 +1,4 @@
+import "./blackbird-env"
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import { RunCommand } from "./cli/cmd/run"
@@ -44,7 +45,7 @@ function show(out: string) {
 
 const cli = yargs(args)
   .parserConfiguration({ "populate--": true })
-  .scriptName("opencode")
+  .scriptName("blackbird")
   .wrap(100)
   .help("help", "show help")
   .alias("help", "h")
