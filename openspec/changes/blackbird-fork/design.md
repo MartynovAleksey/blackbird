@@ -2,17 +2,17 @@
 
 Апстрим `github.com/anomalyco/opencode` — bun-монорепо. Две живые линии:
 
-| Линия | Апстрим-ветка | Версия | Где app-name | Реестр провайдеров | bin |
+| Линия | Основа (тег) | Версия | Где app-name | Реестр провайдеров | bin |
 |---|---|---|---|---|---|
-| 1.x | `v1` | 1.19.5 | `packages/core/src/global.ts` (`const app = "opencode"`) | `packages/core/src/plugin/provider.ts` + auth-плагины в `packages/opencode/src/plugin/index.ts` | `packages/core/package.json` → `opencode` |
-| 2.x | `dev` | 2.2.5 | `packages/util/src/global.ts` | `packages/core/src/plugin/provider.ts` + `packages/core/src/plugin/internal.ts` | `packages/cli/package.json` → `opencode`, `opencode2` |
+| 1.x | `v1.19.5` | 1.19.5 | `packages/core/src/global.ts` (`const app = "opencode"`) | `packages/core/src/plugin/provider.ts` + auth-плагины в `packages/opencode/src/plugin/index.ts` | `packages/core/package.json` → `opencode` |
+| 2.x | `v2.2.5` | 2.2.5 | `packages/util/src/global.ts` | `packages/core/src/plugin/provider.ts` + `packages/core/src/plugin/internal.ts` | `packages/cli/package.json` → `opencode`, `opencode2` |
 
-Ветка `v2` апстрима остановилась на 2.0.26 (10.10.2026) и не используется. Имена `.opencode`, `opencode.json[c]`, `opencode.db` встречаются примерно в 30 runtime-файлах на каждую линию (без тестов и без desktop/web/console). Каталог моделей грузится в `packages/core/src/models-dev*`.
+Основой служат только релизные теги: активная ветка `dev` уходит вперёд релизов на сотни коммитов, а ветка `v2` апстрима остановилась на 2.0.26. Имена `.opencode`, `opencode.json[c]`, `opencode.db` встречаются примерно в 30 runtime-файлах на каждую линию (без тестов и без desktop/web/console). Каталог моделей грузится в `packages/core/src/models-dev*`.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Две ветки blackbird, которые обновляются из апстрима обычным `git merge` с редкими и мелкими конфликтами.
+- Две ветки blackbird, которые обновляются до релизных тегов апстрима обычным `git merge` с редкими и мелкими конфликтами.
 - Ни одного пути с `opencode` в имени на машине пользователя после установки и работы.
 - Ноль встроенных провайдеров; модели берутся только из `blackbird.json`.
 
@@ -24,10 +24,11 @@
 
 ## Decisions
 
-### D1. Ветки форка + `git merge`, а не patch-queue или submodule
-Клон форка `github.com/MartynovAleksey/blackbird` (`origin`), апстрим — `github.com/anomalyco/opencode` (`upstream`, бывш. sst/opencode). Ветки `blackbird/v1` и `blackbird/v2` созданы от `upstream/v1` и `upstream/dev`, отслеживают апстрим для merge, а push идёт в `origin` (`branch.*.pushRemote`). `blackbird/v2` выгружена в корень клона и хранит openspec. `blackbird/v1` вынесена в worktree `../blackbird-v1`. `script/blackbird-sync` лежит в каждой ветке. Отдельной ветки `main` нет. Обновление: `git fetch upstream && git merge upstream/<branch>`.
+### D1. Ветки форка на релизных тегах + `git merge`, а не patch-queue или submodule
+Клон форка `github.com/MartynovAleksey/blackbird` (`origin`), апстрим — `github.com/anomalyco/opencode` (`upstream`). Ветки `blackbird/v1` и `blackbird/v2` созданы от релизных тегов `v1.19.5` и `v2.2.5` и пушатся в `origin`. `blackbird/v2` выгружена в корень клона и хранит openspec, `blackbird/v1` вынесена в worktree `../blackbird-v1`. `script/blackbird-sync <tag>` лежит в каждой ветке. Отдельной ветки `main` нет. Обновление: `git fetch upstream tag <tag> && git merge <tag>`.
+- *Почему теги, а не ветки:* `dev` содержит неотрелизнутые изменения и уходит вперёд релиза на сотни коммитов. Тег фиксирует проверенную апстримом версию, и обновление идёт явным шагом «до версии X».
 - *Альтернатива:* submodule апстрима + каталог `.patch`-файлов + скрипт применения. Это лишний инструмент: те же конфликты, только без git rerere и 3-way merge.
-- *Альтернатива:* rebase стека blackbird-коммитов при каждом обновлении. История получается чище, но нужен force-push и переписывание истории. Если стек останется маленьким, к этому можно перейти позже.
+- *Альтернатива:* rebase стека blackbird-коммитов на каждый новый тег. История получается чище, но нужен force-push. Если стек останется маленьким, к этому можно перейти позже.
 
 ### D2. Ребрендинг правкой строковых констант на месте
 Меняются только литералы, которые превращаются в пути, имена файлов или имя бинарника: `const app`, `".opencode"`, `"opencode.json"`/`"opencode.jsonc"`, имя БД и лога, `bin` в `package.json`, имя команды в CLI (yargs `scriptName`) и лого/заголовок TUI. Новых абстракций (общего `BRAND`-модуля) нет: правка одного литерала в строке почти никогда не конфликтует, а новый модуль потребовал бы менять импорты во многих файлах.
@@ -57,14 +58,14 @@
 - [Апстрим добавляет новый путь с `opencode`] → его поймает D5 после sync, и путь исправляется отдельным коммитом.
 - [В кэше плагинов появится `node_modules/@opencode-ai/plugin`: апстрим автоматически ставит зависимость `@opencode-ai/plugin` в config-каталог и `.opencode/`. Из-за этого `find -iname '*opencode*'` найдёт `@opencode-ai`.] → автоустановку этой зависимости отключить. Плагины пользователя по-прежнему смогут её объявлять сами. D5 проверит результат.
 - [Shim D3 выполнится позже `Flag`, если апстрим поменяет entrypoint] → D5 включает проверку `BLACKBIRD_CONFIG_DIR`.
-- [Линия v1 в maintenance-режиме, и со временем её обновления прекратятся] → когда апстрим перестанет коммитить в `v1`, ветка `blackbird/v1` замораживается. Это осознанная цена двух линий.
+- [Линия v1 в maintenance-режиме, и со временем её обновления прекратятся] → когда апстрим перестанет выпускать теги `v1.*`, ветка `blackbird/v1` замораживается. Это осознанная цена двух линий.
 - [Удаление провайдеров затрагивает плагин-реестр, который апстрим часто меняет] → это главный источник конфликтов. Правки держим построчными: строки удаляются или комментируются, код не переписывается.
 - [Функции, ходящие в сервисы opencode (share на opncd.ai, Zen, телеметрия, проверка обновлений)] → это не имена на файловой системе, и в scope они не входят. См. Open Questions.
 
 ## Migration Plan
 
-1. Remote `upstream` → `https://github.com/anomalyco/opencode.git`, fetch `v1` и `dev`.
-2. Создать ветки `blackbird/v1` и `blackbird/v2` от `upstream/v1` и `upstream/dev`, worktree `../blackbird-v1`.
+1. Remote `upstream` → `https://github.com/anomalyco/opencode.git`, fetch тегов `v1.19.5` и `v2.2.5`.
+2. Создать ветки `blackbird/v1` и `blackbird/v2` от тегов `v1.19.5` и `v2.2.5`, worktree `../blackbird-v1`.
 3. В каждой ветке: ребрендинг (D2), shim (D3), провайдеры (D4), проверка (D5). Каждую тему оформить отдельным коммитом, чтобы при конфликте было видно, что именно сломалось.
 4. Добавить `script/blackbird-sync` и `BLACKBIRD.md` в каждую ветку, push в `origin`.
 
