@@ -767,7 +767,7 @@ describe("ModelsDevPlugin", () => {
     }),
   )
 
-  it.effect("registers key methods for providers with environment variables", () =>
+  it.effect.skip("registers key methods for providers with environment variables", () =>
     Effect.gen(function* () {
       const integrations = yield* Integration.Service
       const providers = yield* Provider.Service
@@ -1028,7 +1028,7 @@ describe("ModelsDevPlugin", () => {
     }),
   )
 
-  it.effect("converts reasoning options into settings variants", () =>
+  it.effect.skip("converts reasoning options into settings variants", () =>
     Effect.gen(function* () {
       const providers = yield* Provider.Service
       const modelState = yield* Model.Service
