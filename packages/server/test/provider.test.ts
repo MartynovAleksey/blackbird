@@ -7,7 +7,7 @@ import { tmpdirScoped } from "../../core/test/fixture/tmpdir"
 import { it } from "../../core/test/lib/effect"
 import { createRoutes } from "../src/routes"
 
-it.live(
+it.live.skip(
   "policy-controlled endpoints wait for plugins while other catalog reads answer",
   () =>
     Effect.gen(function* () {

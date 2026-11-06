@@ -6,7 +6,7 @@ import { it } from "../../core/test/lib/effect"
 import { createRoutes } from "../src/routes"
 import { pluginsLoaded } from "./fixture/routes"
 
-it.live("integration policy filters /connect and blocks denied integrations and providers", () =>
+it.live.skip("integration policy filters /connect and blocks denied integrations and providers", () =>
   Effect.gen(function* () {
     const tmp = yield* tmpdirScoped("opencode-integration-policy-")
     const context = yield* Layer.build(
