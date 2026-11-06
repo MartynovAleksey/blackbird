@@ -7,9 +7,10 @@ import { Context, Effect, Layer } from "effect"
 // native-module stubs, so no runtime sniffing happens here.
 import { roots } from "#global-roots"
 import { Flock } from "./flock.js"
+import { Brand } from "./brand.js"
 import { makeGlobalNode } from "./effect/app-node.js"
 
-const app = "blackbird"
+const app = Brand.name
 const { data, cache, config, state, tmp } = roots(app)
 
 const paths = {

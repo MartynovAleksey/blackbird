@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 export * as Config from "./config.js"
 
 import { makeLocationNode } from "@opencode/util/effect/app-node"
@@ -467,7 +468,7 @@ export const layer = (options?: Options) =>
           const directory = initial.global ?? AbsolutePath.make(globalService.config)
           const candidates = ConfigDiscovery.names.map((name) => path.join(directory, name))
           const filepath =
-            (yield* Effect.filter(candidates, fs.isFile)).at(-1) ?? path.join(directory, "blackbird.jsonc")
+            (yield* Effect.filter(candidates, fs.isFile)).at(-1) ?? path.join(directory, `${Brand.name}.jsonc`)
           const text = (yield* fs.readFileStringSafe(filepath)) ?? "{}\n"
           const updated = yield* Effect.try({
             try: () =>
