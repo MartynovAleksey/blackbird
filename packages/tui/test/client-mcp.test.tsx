@@ -119,7 +119,7 @@ async function initialize(tui: Awaited<ReturnType<typeof start>>) {
     request("tools/call", {
       name,
       arguments: args,
-      ...(sessionID ? { _meta: { "ai.blackbird/sessionID": sessionID } } : {}),
+      ...(sessionID ? { _meta: { "ai.opencode/sessionID": sessionID } } : {}),
     })
 }
 

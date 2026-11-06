@@ -16,11 +16,11 @@ describe("global roots", () => {
     }
 
     expect(run(env)).toEqual({
-      data: path.join(env.XDG_DATA_HOME, "blackbird"),
-      cache: path.join(env.XDG_CACHE_HOME, "blackbird"),
-      config: path.join(env.XDG_CONFIG_HOME, "blackbird"),
-      state: path.join(env.XDG_STATE_HOME, "blackbird"),
-      tmp: path.join(os.tmpdir(), "blackbird"),
+      data: path.join(env.XDG_DATA_HOME, "opencode"),
+      cache: path.join(env.XDG_CACHE_HOME, "opencode"),
+      config: path.join(env.XDG_CONFIG_HOME, "opencode"),
+      state: path.join(env.XDG_STATE_HOME, "opencode"),
+      tmp: path.join(os.tmpdir(), "opencode"),
     })
   })
 
@@ -36,11 +36,11 @@ describe("global roots", () => {
         ...(process.platform === "win32" ? { USERPROFILE: home } : { HOME: home }),
       }),
     ).toEqual({
-      data: path.join(home, ".local", "share", "blackbird"),
-      cache: path.join(home, ".cache", "blackbird"),
-      config: path.join(home, ".config", "blackbird"),
-      state: path.join(home, ".local", "state", "blackbird"),
-      tmp: path.join(os.tmpdir(), "blackbird"),
+      data: path.join(home, ".local", "share", "opencode"),
+      cache: path.join(home, ".cache", "opencode"),
+      config: path.join(home, ".config", "opencode"),
+      state: path.join(home, ".local", "state", "opencode"),
+      tmp: path.join(os.tmpdir(), "opencode"),
     })
   })
 })
