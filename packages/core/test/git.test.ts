@@ -333,11 +333,11 @@ describe("Git trees", () => {
         yield* Effect.promise(() => $`git --git-dir ${storage} config --local --includes core.autocrlf`.text()),
       ).toBe("false\n")
       expect(
-        (yield* Effect.promise(() => fs.readFile(path.join(storage, "config"), "utf8"))).match(/opencode\.gitconfig/g),
+        (yield* Effect.promise(() => fs.readFile(path.join(storage, "config"), "utf8"))).match(/blackbird\.gitconfig/g),
       ).toHaveLength(1)
       expect(
         yield* Effect.promise(() => $`git --git-dir ${storage} config --local --get-all include.path`.text()),
-      ).toBe("opencode.gitconfig\nfirst.gitconfig\nsecond.gitconfig\n")
+      ).toBe("blackbird.gitconfig\nfirst.gitconfig\nsecond.gitconfig\n")
       yield* git.index.refresh({ repository, scope: RelativePath.make("scope") })
       const before = yield* git.tree.write(repository)
 

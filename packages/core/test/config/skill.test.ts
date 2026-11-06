@@ -183,7 +183,7 @@ describe("ConfigSkillPlugin.Plugin", () => {
         Effect.gen(function* () {
           const claude = path.join(tmp.path, "claude")
           const agents = path.join(tmp.path, "agents")
-          const opencode = path.join(tmp.path, "opencode")
+          const opencode = path.join(tmp.path, "blackbird")
           const home = path.join(tmp.path, "home")
           const directory = path.join(tmp.path, "project")
           const expected = [
@@ -449,7 +449,7 @@ describe("ConfigSkillPlugin.Plugin", () => {
           )
           yield* Effect.yieldNow
 
-          yield* configTest.emitChange({ type: "update", path: path.join(tmp.path, "opencode.json") })
+          yield* configTest.emitChange({ type: "update", path: path.join(tmp.path, "blackbird.json") })
           yield* configTest.emitChange({ type: "create", path: path.join(tmp.path, "commands", "review.md") })
           yield* configTest.emitChange({ type: "create", path: path.join(tmp.path, "agents", "reviewer.md") })
           yield* drain
