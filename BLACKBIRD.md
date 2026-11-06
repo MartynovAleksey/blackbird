@@ -10,10 +10,10 @@
 
 ## Линии
 
-| Ветка | Апстрим | Где лежит | Сборка (из корня) | Бинарник |
+| Ветка | Основа (тег апстрима) | Где лежит | Сборка (из корня) | Бинарник |
 |---|---|---|---|---|
-| `blackbird/v2` | `upstream/dev` (2.x) | `blackbird/` | `cd packages/cli && bun run script/build.ts --single --skip-install --skip-web-ui` | `packages/cli/dist/cli-<os>-<arch>/bin/blackbird` |
-| `blackbird/v1` | `upstream/v1` (1.x) | `blackbird-v1/` (worktree) | `cd packages/opencode && bun run script/build.ts --single --skip-install` | `packages/opencode/dist/opencode-<os>-<arch>/bin/blackbird` |
+| `blackbird/v2` | `v2.2.5` | `blackbird/` | `cd packages/cli && bun run script/build.ts --single --skip-install --skip-web-ui` | `packages/cli/dist/cli-<os>-<arch>/bin/blackbird` |
+| `blackbird/v1` | `v1.19.5` | `blackbird-v1/` (worktree) | `cd packages/opencode && bun run script/build.ts --single --skip-install` | `packages/opencode/dist/opencode-<os>-<arch>/bin/blackbird` |
 
 Нужен bun версии из `packageManager` в корневом `package.json`.
 
@@ -36,11 +36,13 @@
 
 ## Обновление из апстрима
 
+Линии обновляются только до релизных тегов апстрима (`v2.*` для `blackbird/v2`, `v1.*` для `blackbird/v1`), активные ветки `dev`/`v1` не используются.
+
 ```bash
-script/blackbird-sync
+script/blackbird-sync v2.2.6
 ```
 
-Скрипт мержит апстрим-ветку текущей линии, ставит зависимости и запускает `script/blackbird-check.sh`. Проверка собирает CLI, запускает его в пустом `HOME` и падает на любом пути с `opencode`, на встроенном провайдере и на запросе к каталогу моделей.
+Скрипт забирает тег из `upstream`, мержит его в текущую линию, ставит зависимости и запускает `script/blackbird-check.sh`. Проверка собирает CLI, запускает его в пустом `HOME` и падает на любом пути с `opencode`, на встроенном провайдере и на запросе к каталогу моделей.
 
 При конфликте merge не коммитится. Разрешите конфликты, сохранив правки blackbird (они помечены комментарием `blackbird:` или заменяют `opencode` на `blackbird` в литерале), закоммитьте и запустите `script/blackbird-check.sh`. Если проверка нашла новый путь с `opencode`, исправьте литерал в апстримном файле отдельным коммитом.
 

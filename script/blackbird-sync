@@ -1,21 +1,26 @@
 #!/usr/bin/env bash
-# Обновление текущей линии blackbird из апстрима: merge апстрим-ветки и проверка ребрендинга.
-# blackbird/v1 <- upstream/v1, blackbird/v2 <- upstream/dev. При конфликте merge остаётся незакоммиченным.
-# usage: script/blackbird-sync   (в worktree нужной линии)
+# Обновление текущей линии blackbird до релизного тега апстрима: merge тега и проверка ребрендинга.
+# blackbird/v1 принимает теги v1.*, blackbird/v2 — теги v2.*. При конфликте merge остаётся незакоммиченным.
+# usage: script/blackbird-sync <tag>   (например: script/blackbird-sync v2.2.6)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+tag=${1:?"usage: script/blackbird-sync <upstream-tag>, например v2.2.6"}
 branch=$(git symbolic-ref --short HEAD)
 case "$branch" in
-  blackbird/v1) up=v1 ;;
-  blackbird/v2) up=dev ;;
+  blackbird/v1) line=v1 ;;
+  blackbird/v2) line=v2 ;;
   *) echo "текущая ветка $branch — не blackbird/v1 или blackbird/v2" >&2; exit 1 ;;
+esac
+case "$tag" in
+  "$line".*) ;;
+  *) echo "тег $tag не относится к линии $line" >&2; exit 1 ;;
 esac
 [ -z "$(git status --porcelain --untracked-files=no)" ] || { echo "есть незакоммиченные изменения" >&2; exit 1; }
 
-git fetch upstream "$up"
-if ! git merge --no-edit "upstream/$up"; then
-  echo "Конфликты с upstream/$up — разрешите, закоммитьте и запустите script/blackbird-check.sh:" >&2
+git fetch --no-tags upstream "refs/tags/$tag:refs/tags/$tag"
+if ! git merge --no-edit "$tag"; then
+  echo "Конфликты с $tag — разрешите, закоммитьте и запустите script/blackbird-check.sh:" >&2
   git diff --name-only --diff-filter=U >&2
   exit 1
 fi
