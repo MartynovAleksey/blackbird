@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 export * as ConfigDiscovery from "./discovery.js"
 
 import os from "os"
@@ -9,7 +10,7 @@ import { Location } from "../location.js"
 import { AbsolutePath } from "../schema.js"
 import type { Options } from "../config.js"
 
-export const names = ["blackbird.json", "blackbird.jsonc"]
+export const names = [`${Brand.name}.json`, `${Brand.name}.jsonc`]
 
 /** Eligible sources in priority order, including paths that may appear later. */
 export interface Sources {
@@ -26,9 +27,9 @@ export interface Sources {
 
 /** Platform system configuration directory (`/Library/Application Support/blackbird`, `/etc/blackbird`, `%ProgramData%\blackbird`). */
 export function systemDirectory(platform: NodeJS.Platform = process.platform, env: NodeJS.ProcessEnv = process.env) {
-  if (platform === "darwin") return AbsolutePath.make("/Library/Application Support/blackbird")
-  if (platform === "win32") return AbsolutePath.make(path.join(env.ProgramData || "C:\\ProgramData", "blackbird"))
-  return AbsolutePath.make("/etc/blackbird")
+  if (platform === "darwin") return AbsolutePath.make(`/Library/Application Support/${Brand.name}`)
+  if (platform === "win32") return AbsolutePath.make(path.join(env.ProgramData || "C:\\ProgramData", Brand.name))
+  return AbsolutePath.make(`/etc/${Brand.name}`)
 }
 
 /** macOS MDM managed preferences plists, most specific first; the first one present wins. */
@@ -82,7 +83,7 @@ export const discover = Effect.fn("ConfigDiscovery.discover")(function* (options
     Effect.gen(function* () {
       // Resolve the parent too: missing children must honor symlinked global roots.
       const parent = yield* fs.resolve(directory)
-      return yield* Effect.forEach([".claude", ".agents", ".blackbird", ...names.toReversed()], (name) =>
+      return yield* Effect.forEach([".claude", ".agents", `.${Brand.name}`, ...names.toReversed()], (name) =>
         fs
           .resolve(path.join(parent, name))
           .pipe(Effect.map((resolved) => ({ item: AbsolutePath.make(path.join(directory, name)), resolved }))),
@@ -121,9 +122,9 @@ export const discover = Effect.fn("ConfigDiscovery.discover")(function* (options
     preferences,
     global: globalEnabled ? globalDirectory : undefined,
     explicit: options?.file ? AbsolutePath.make(path.resolve(options.file)) : undefined,
-    direct: visible.filter((item) => ![".agents", ".claude", ".blackbird"].includes(path.basename(item))).toReversed(),
+    direct: visible.filter((item) => ![".agents", ".claude", `.${Brand.name}`].includes(path.basename(item))).toReversed(),
     project: yield* Effect.forEach(
-      visible.filter((item) => path.basename(item) === ".blackbird").toReversed(),
+      visible.filter((item) => path.basename(item) === `.${Brand.name}`).toReversed(),
       (directory) => fs.isDir(directory).pipe(Effect.map((present) => ({ path: directory, present }))),
     ),
     claude:

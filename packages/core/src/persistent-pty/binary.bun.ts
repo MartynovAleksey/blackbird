@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 import { createHash } from "node:crypto"
 import { chmod, lstat, mkdir, open, readFile, rename, rm } from "node:fs/promises"
 import path from "node:path"
@@ -16,12 +17,12 @@ async function install(
   bin: string,
   input: { readonly path: string; readonly version: string; readonly sha256: string },
 ) {
-  const root = path.join(bin, "blackbird-pty")
+  const root = path.join(bin, `${Brand.name}-pty`)
   await privateDirectory(root)
   const directory = path.join(root, `${input.version}-${input.sha256.slice(0, 16)}`)
   await privateDirectory(directory)
   // Windows only launches executables with their extension.
-  const destination = path.join(directory, process.platform === "win32" ? "blackbird-pty.exe" : "blackbird-pty")
+  const destination = path.join(directory, process.platform === "win32" ? `${Brand.name}-pty.exe` : `${Brand.name}-pty`)
   if (await validateIfPresent(destination, input.sha256)) return destination
 
   const bytes = new Uint8Array(await Bun.file(input.path).arrayBuffer())

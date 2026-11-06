@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 export * as PlanPlugin from "./plan.js"
 
 import { Message, ToolFailure } from "@opencode/ai/effect"
@@ -28,7 +29,7 @@ export const Plugin = define({
   id: "opencode.plan",
   effect: Effect.fn(function* (ctx) {
     const global = yield* Global.Service
-    const directory = path.join(global.home, ".blackbird", "plan")
+    const directory = path.join(global.home, `.${Brand.name}`, "plan")
     const enterReminder = enter(directory)
     yield* ctx.agent.transform((editor) => {
       editor.update(plan, (item) => {

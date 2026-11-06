@@ -1,3 +1,4 @@
+import { Brand } from "../brand.js"
 import { Effect, FileSystem, Formatter, Logger, Option, Schedule, Stream, type LogLevel } from "effect"
 import path from "path"
 import { Global } from "../global.js"
@@ -57,8 +58,8 @@ function format(input: unknown) {
 }
 
 export function file(local = true, channel = "local") {
-  if (!local) return path.join(Global.Path.log, "blackbird.log")
-  return path.join(Global.Path.log, `blackbird-${channel.replace(/[^a-zA-Z0-9._-]/g, "-")}.log`)
+  if (!local) return path.join(Global.Path.log, `${Brand.name}.log`)
+  return path.join(Global.Path.log, `${Brand.name}-${channel.replace(/[^a-zA-Z0-9._-]/g, "-")}.log`)
 }
 
 export function fileLogger(target = file(), id: string = runID()) {

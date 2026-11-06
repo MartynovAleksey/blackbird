@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 import { readdir, stat } from "node:fs/promises"
 import path from "node:path"
 import { localSource } from "@opencode/plugin/source"
@@ -7,7 +8,7 @@ export { localSource }
 
 export async function localPluginDirectories(cwd: string, configDirectory: string) {
   const projectDirectory = await localProjectDirectory(cwd)
-  const projectConfig = path.join(projectDirectory, ".blackbird")
+  const projectConfig = path.join(projectDirectory, `.${Brand.name}`)
   const directories = [configDirectory, ...projectConfigDirectories(projectDirectory, cwd)]
   const exists = await Promise.all(
     directories.map(async (directory) => {

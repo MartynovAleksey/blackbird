@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 export * as SessionRunnerModel from "./model.js"
 
 import { makeLocationNode } from "@opencode/util/effect/app-node"
@@ -14,7 +15,7 @@ export class ModelNotSelectedError extends Schema.TaggedError<ModelNotSelectedEr
   { sessionID: SessionSchema.ID },
 ) {
   override get message() {
-    return `No model is available for session ${this.sessionID}. Configure a provider in blackbird.json`
+    return `No model is available for session ${this.sessionID}. Configure a provider in ${Brand.name}.json`
   }
 }
 
