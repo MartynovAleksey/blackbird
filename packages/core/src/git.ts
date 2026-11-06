@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 export * as Git from "./git.js"
 
 import os from "os"
@@ -21,7 +22,7 @@ export class Repository extends Schema.Class<Repository>("Git.Repository")({
 
 // Included from $GIT_DIR/config via include.path (git >= 1.7.10); OpenCode owns
 // this file entirely, so updates are plain rewrites with no config parsing.
-const snapshotConfigFile = "blackbird.gitconfig"
+const snapshotConfigFile = `${Brand.name}.gitconfig`
 const snapshotConfigInclude = `[include]
 	path = ${snapshotConfigFile}
 `
@@ -266,7 +267,7 @@ const layer = Layer.effect(
         path.join(gitDir, "config.worktree"),
         path.join(commonDir, "packed-refs"),
         path.join(commonDir, "reftable", "tables.list"),
-        path.join(commonDir, "blackbird"),
+        path.join(commonDir, Brand.name),
         ...(ref ? [path.join(commonDir, ref), path.join(gitDir, ref)] : []),
         process.env.GIT_CONFIG_GLOBAL || path.join(home, ".gitconfig"),
         path.join(process.env.XDG_CONFIG_HOME || path.join(home, ".config"), "git", "config"),

@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 import { Global } from "@opencode/util/global"
 import { AppProcess } from "@opencode/util/process"
 import { EffectFlock } from "@opencode/util/effect-flock"
@@ -162,7 +163,7 @@ const make = Effect.gen(function* () {
   const installedWinget = /[\\/]winget[\\/]packages[\\/]anomaly\.opencode_/i.test(executable)
 
   const readPolicy = Effect.fnUntraced(function* () {
-    const values = yield* Effect.forEach(["config.json", "blackbird.json", "blackbird.jsonc"], (name) =>
+    const values = yield* Effect.forEach(["config.json", `${Brand.name}.json`, `${Brand.name}.jsonc`], (name) =>
       fs.readFileString(path.join(global.config, name)).pipe(
         Effect.map(decodePolicy),
         Effect.orElseSucceed(() => undefined),

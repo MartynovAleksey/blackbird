@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 import { Cause, Context, Duration, Effect, Layer, Option, Result, Schedule, Schema, Semaphore } from "effect"
 import { HttpClient, HttpClientError, HttpClientRequest } from "effect/http"
 import { ConfigProvider } from "@opencode/schema/config/provider"
@@ -530,8 +531,8 @@ export const layer = (options?: Options) =>
   Layer.effect(
     Service,
     Effect.gen(function* () {
-      // blackbird: no models catalog (no fetch, no bundled snapshot); models come only from config.
-      if (true as boolean) return Service.of({ get: () => Effect.succeed([]), refresh: () => Effect.void })
+      // blackbird: no models catalog (no fetch, no bundled snapshot) unless --opencode-compatible; models come from config.
+      if (!Brand.compat) return Service.of({ get: () => Effect.succeed([]), refresh: () => Effect.void })
       const fs = yield* FSUtil.Service
       const bus = yield* Bus.Service
       const app = yield* App.Metadata
