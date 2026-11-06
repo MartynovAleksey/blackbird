@@ -408,6 +408,7 @@ describe("session.llm native recorded", () => {
       continue
     }
     const it = testEffect(recordedNativeLLMLayer(scenario))
-    it.instance(`${scenario.name}: drives a tool loop to a final text answer`, () => driveToolLoop(scenario))
+    // blackbird: OpenAI OAuth provider removed
+    ;(scenario.name === "OpenAI OAuth" ? it.instance.skip : it.instance)(`${scenario.name}: drives a tool loop to a final text answer`, () => driveToolLoop(scenario))
   }
 })

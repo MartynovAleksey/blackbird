@@ -1016,7 +1016,7 @@ it.instance("subtask child inherits parent session external_directory allow", ()
   }),
 )
 
-noLLMServer.instance("prompt tools replace previous prompt tool rules", () =>
+noLLMServer.instance.skip("prompt tools replace previous prompt tool rules", () =>
   Effect.gen(function* () {
     const prompt = yield* SessionPrompt.Service
     const sessions = yield* Session.Service

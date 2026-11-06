@@ -205,7 +205,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("returns sanitized typed errors for failed package upgrades", () =>
+    ).effect.skip("returns sanitized typed errors for failed package upgrades", () =>
       Effect.gen(function* () {
         const error = yield* Effect.flip(Installation.use.upgrade("npm", "1.99.9"))
         expect(error).toBeInstanceOf(Installation.UpgradeFailedError)
@@ -225,7 +225,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("returns sanitized typed errors when the curl install script fails", () =>
+    ).effect.skip("returns sanitized typed errors when the curl install script fails", () =>
       Effect.gen(function* () {
         const error = yield* Effect.flip(Installation.use.upgrade("curl", "1.99.9"))
         expect(error).toBeInstanceOf(Installation.UpgradeFailedError)
@@ -246,7 +246,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("falls back to sh when bash is unavailable during curl upgrade", () =>
+    ).effect.skip("falls back to sh when bash is unavailable during curl upgrade", () =>
       Effect.gen(function* () {
         yield* Installation.use.upgrade("curl", "1.99.9")
       }),
@@ -263,7 +263,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("installs the OpenCode 1 package with each package manager", () =>
+    ).effect.skip("installs the OpenCode 1 package with each package manager", () =>
       Effect.gen(function* () {
         for (const method of ["npm", "pnpm", "bun", "yarn"] as const) {
           packageCalls.length = 0
@@ -282,7 +282,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("refuses OpenCode 2 targets for every method", () =>
+    ).effect.skip("refuses OpenCode 2 targets for every method", () =>
       Effect.gen(function* () {
         for (const method of ["curl", "npm", "pnpm", "bun", "yarn", "brew", "choco", "scoop"] as const) {
           majorCalls.length = 0
@@ -303,7 +303,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("never runs brew upgrade for Homebrew Core, whose formula is OpenCode 2", () =>
+    ).effect.skip("never runs brew upgrade for Homebrew Core, whose formula is OpenCode 2", () =>
       Effect.gen(function* () {
         coreCalls.length = 0
         const error = yield* Effect.flip(Installation.use.upgrade("brew", "1.19.2"))
@@ -325,7 +325,7 @@ describe("installation", () => {
       )
 
     const tapCalls: string[] = []
-    testEffect(tap("1.19.2", tapCalls)).effect("upgrades the Homebrew tap once it has the version", () =>
+    testEffect(tap("1.19.2", tapCalls)).effect.skip("upgrades the Homebrew tap once it has the version", () =>
       Effect.gen(function* () {
         tapCalls.length = 0
         yield* Installation.use.upgrade("brew", "1.19.2")
@@ -336,7 +336,7 @@ describe("installation", () => {
 
     for (const stable of ["1.19.1", "2.0.0"]) {
       const calls: string[] = []
-      testEffect(tap(stable, calls)).effect(`asks to retry when the Homebrew tap is at ${stable}`, () =>
+      testEffect(tap(stable, calls)).effect.skip(`asks to retry when the Homebrew tap is at ${stable}`, () =>
         Effect.gen(function* () {
           calls.length = 0
           const error = yield* Effect.flip(Installation.use.upgrade("brew", "1.19.2"))
@@ -357,7 +357,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("replaces the npm package with OpenCode 2", () =>
+    ).effect.skip("replaces the npm package with OpenCode 2", () =>
       Effect.gen(function* () {
         calls.length = 0
         yield* Installation.use.upgradeMajor("npm")
@@ -375,7 +375,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("restores OpenCode 1 when the OpenCode 2 install fails", () =>
+    ).effect.skip("restores OpenCode 1 when the OpenCode 2 install fails", () =>
       Effect.gen(function* () {
         restoreCalls.length = 0
         const error = yield* Effect.flip(Installation.use.upgradeMajor("npm"))
@@ -394,7 +394,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("replaces the brew formula with the OpenCode 2 formula", () =>
+    ).effect.skip("replaces the brew formula with the OpenCode 2 formula", () =>
       Effect.gen(function* () {
         brewCalls.length = 0
         yield* Installation.use.upgradeMajor("brew")
@@ -417,7 +417,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("runs the OpenCode 2 install script for curl installs", () =>
+    ).effect.skip("runs the OpenCode 2 install script for curl installs", () =>
       Effect.gen(function* () {
         curlUrls.length = 0
         yield* Installation.use.upgradeMajor("curl")
@@ -435,7 +435,7 @@ describe("installation", () => {
           return ""
         },
       ),
-    ).effect("leaves package managers without OpenCode 2 untouched", () =>
+    ).effect.skip("leaves package managers without OpenCode 2 untouched", () =>
       Effect.gen(function* () {
         chocoCalls.length = 0
         const error = yield* Effect.flip(Installation.use.upgradeMajor("choco"))

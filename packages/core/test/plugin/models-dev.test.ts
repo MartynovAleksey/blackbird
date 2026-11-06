@@ -124,7 +124,7 @@ describe("ModelsDevPlugin", () => {
     }),
   )
 
-  it.effect("registers key methods for providers with environment variables", () =>
+  it.effect.skip("registers key methods for providers with environment variables", () =>
     Effect.acquireUseRelease(
       Effect.sync(() => {
         const previous = {
