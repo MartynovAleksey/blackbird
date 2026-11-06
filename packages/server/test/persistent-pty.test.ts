@@ -626,7 +626,7 @@ function testDirectory() {
       process.env.OPENCODE_PTY_BIN = binary
       process.env.SHELL = "/bin/sh"
       return {
-        database: path.join(root, "opencode.db"),
+        database: path.join(root, "blackbird.db"),
         directory: path.join(root, "runtime"),
         environment,
         root,
