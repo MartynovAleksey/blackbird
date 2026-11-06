@@ -65,6 +65,7 @@ export function experimentalWebSocketsEnabled(input: { enabled: boolean; channel
 
 // Built-in plugins that are directly imported (not installed from npm)
 function internalPlugins(flags: RuntimeFlags.Info): PluginInstance[] {
+  if (true as boolean) return [] // blackbird: no built-in provider auth plugins
   return [
     // Temporary rollout: pre-release builds use WebSockets by default; releases require explicit opt-in.
     (input) =>
