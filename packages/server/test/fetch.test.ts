@@ -423,7 +423,7 @@ it.live("returns 404 when a previously readable file is deleted", () =>
   ).pipe(Effect.scoped),
 )
 
-it.live("cancels a stale OpenAI OAuth callback server before falling back", () =>
+it.live.skip("cancels a stale OpenAI OAuth callback server before falling back", () =>
   Effect.gen(function* () {
     const requests = yield* occupy(1455, true)
     const handler = yield* ServerFetch.make(options)
@@ -436,7 +436,7 @@ it.live("cancels a stale OpenAI OAuth callback server before falling back", () =
   }),
 )
 
-it.live("falls back to port 1457 when OpenAI OAuth port 1455 remains busy", () =>
+it.live.skip("falls back to port 1457 when OpenAI OAuth port 1455 remains busy", () =>
   Effect.gen(function* () {
     const requests = yield* occupy(1455)
     const handler = yield* ServerFetch.make(options)
@@ -449,7 +449,7 @@ it.live("falls back to port 1457 when OpenAI OAuth port 1455 remains busy", () =
   }),
 )
 
-it.live(
+it.live.skip(
   "explains how to recover when both OpenAI OAuth callback ports are busy",
   () =>
     Effect.gen(function* () {

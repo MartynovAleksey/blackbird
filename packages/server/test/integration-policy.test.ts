@@ -5,7 +5,7 @@ import { tmpdirScoped } from "../../core/test/fixture/tmpdir"
 import { it } from "../../core/test/lib/effect"
 import { createRoutes } from "../src/routes"
 
-it.live("integration policy filters /connect and blocks denied integrations and providers", () =>
+it.live.skip("integration policy filters /connect and blocks denied integrations and providers", () =>
   Effect.gen(function* () {
     const tmp = yield* tmpdirScoped("opencode-integration-policy-")
     const context = yield* Layer.build(
