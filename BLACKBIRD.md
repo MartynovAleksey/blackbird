@@ -46,6 +46,31 @@ script/blackbird-sync v2.2.6
 
 При конфликте merge не коммитится. Разрешите конфликты, сохранив правки blackbird (они помечены комментарием `blackbird:` или заменяют `opencode` на `blackbird` в литерале), закоммитьте и запустите `script/blackbird-check.sh`. Если проверка нашла новый путь с `opencode`, исправьте литерал в апстримном файле отдельным коммитом.
 
+## Переход с opencode
+
+### Импорт
+
+```bash
+blackbird --opencode-import                     # всё из ~/.config, ~/.local/share и ~/.local/state opencode
+blackbird --opencode-import ./opencode.json     # → ./blackbird.json
+blackbird --opencode-import ./.opencode         # → ./.blackbird
+```
+
+- Имена с `opencode` переименовываются в `blackbird` (`opencode.jsonc` → `blackbird.jsonc`, `opencode.db` → `blackbird.db`).
+- Существующие файлы blackbird перед перезаписью сохраняются как `.bak` (`.bak.1`, …).
+- Не переносятся: кэш, `node_modules`, логи, блокировки и `service.json` запущенного opencode.
+- База сессий копируется согласованным снимком, только если все её миграции известны этой сборке и в неё не писал opencode более новой мажорной версии. Иначе она пропускается с объяснением.
+- Исходные файлы opencode не изменяются. На время импорта blackbird лучше не запускать.
+
+### Режим совместимости
+
+```bash
+blackbird --opencode-compatible                 # работать прямо на файлах opencode
+blackbird --opencode-compatible=/path/to/config # свой каталог конфигурации opencode
+```
+
+В этом режиме blackbird использует каталоги, конфиги, базу и ключи opencode, включает встроенные провайдеры и каталог моделей (с сетевыми запросами к нему). Обновления из релизов opencode остаются выключенными. То же самое включает переменная `BLACKBIRD_OPENCODE_COMPATIBLE=1`. Если одновременно запущен opencode, blackbird работает с той же базой и фоновым сервисом, что и он.
+
 ## Известные ограничения
 
 - В сообщениях UI и подсказках ещё встречается «OpenCode»; переименованы только `--help`, заголовок и лого TUI.
