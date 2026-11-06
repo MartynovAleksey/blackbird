@@ -1,3 +1,4 @@
+import { Brand } from "./brand"
 export * as ProjectV2 from "./project"
 export * as Project from "./project"
 
@@ -63,7 +64,7 @@ const layer = Layer.effect(
     })
 
     const cached = Effect.fnUntraced(function* (dir: string) {
-      return yield* fs.readFileString(path.join(dir, "blackbird")).pipe(
+      return yield* fs.readFileString(path.join(dir, Brand.name)).pipe(
         Effect.map((value) => value.trim()),
         Effect.map((value) => (value ? ID.make(value) : undefined)),
         Effect.catch(() => Effect.succeed(undefined)),
@@ -122,7 +123,7 @@ const layer = Layer.effect(
     })
 
     const commit = Effect.fn("Project.commit")(function* (input: { store: AbsolutePath; id: ID }) {
-      yield* fs.writeFileString(path.join(input.store, "blackbird"), input.id).pipe(Effect.ignore)
+      yield* fs.writeFileString(path.join(input.store, Brand.name), input.id).pipe(Effect.ignore)
     })
 
     return Service.of({ directories, resolve, commit })

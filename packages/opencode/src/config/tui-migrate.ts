@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 import path from "path"
 import { type ParseError as JsoncParseError, applyEdits, modify, parse as parseJsonc } from "jsonc-parser"
 import { unique } from "remeda"
@@ -114,11 +115,11 @@ async function backupAndStripLegacy(file: string, source: string) {
 
 async function opencodeFiles(input: { directories: string[]; cwd: string }) {
   const files = [
-    ...ConfigPaths.fileInDirectory(Global.Path.config, "blackbird"),
-    ...(await Filesystem.findUp(["blackbird.json", "blackbird.jsonc"], input.cwd, undefined, { rootFirst: true })),
+    ...ConfigPaths.fileInDirectory(Global.Path.config, Brand.name),
+    ...(await Filesystem.findUp([`${Brand.name}.json`, `${Brand.name}.jsonc`], input.cwd, undefined, { rootFirst: true })),
   ]
   for (const dir of unique(input.directories)) {
-    files.push(...ConfigPaths.fileInDirectory(dir, "blackbird"))
+    files.push(...ConfigPaths.fileInDirectory(dir, Brand.name))
   }
   if (Flag.OPENCODE_CONFIG) files.push(Flag.OPENCODE_CONFIG)
 

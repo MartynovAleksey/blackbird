@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import type {
   Hooks,
@@ -65,7 +66,7 @@ export function experimentalWebSocketsEnabled(input: { enabled: boolean; channel
 
 // Built-in plugins that are directly imported (not installed from npm)
 function internalPlugins(flags: RuntimeFlags.Info): PluginInstance[] {
-  if (true as boolean) return [] // blackbird: no built-in provider auth plugins
+  if (!Brand.compat) return [] // blackbird: built-in provider auth plugins only in --opencode-compatible mode
   return [
     // Temporary rollout: pre-release builds use WebSockets by default; releases require explicit opt-in.
     (input) =>

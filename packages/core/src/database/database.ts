@@ -1,3 +1,4 @@
+import { Brand } from "../brand"
 export * as Database from "./database"
 
 import { EffectDrizzleSqlite } from "@opencode-ai/effect-drizzle-sqlite"
@@ -50,8 +51,8 @@ export function path() {
     process.env.OPENCODE_DISABLE_CHANNEL_DB === "1" ||
     process.env.OPENCODE_DISABLE_CHANNEL_DB === "true"
   )
-    return join(Global.Path.data, "blackbird.db")
-  return join(Global.Path.data, `blackbird-${InstallationChannel.replace(/[^a-zA-Z0-9._-]/g, "-")}.db`)
+    return join(Global.Path.data, `${Brand.name}.db`)
+  return join(Global.Path.data, `${Brand.name}-${InstallationChannel.replace(/[^a-zA-Z0-9._-]/g, "-")}.db`)
 }
 
 export const node = makeGlobalNode({ service: Service, layer: layerFromPath(path()), deps: [] })

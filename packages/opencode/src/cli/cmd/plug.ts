@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 import { intro, log, outro, spinner } from "@clack/prompts"
 import { Effect } from "effect"
 
@@ -28,7 +29,7 @@ export type PlugDeps = {
   readText: (file: string) => Promise<string>
   write: (file: string, text: string) => Promise<void>
   exists: (file: string) => Promise<boolean>
-  files: (dir: string, name: "blackbird" | "tui") => string[]
+  files: (dir: string, name: string) => string[]
   global: string
 }
 

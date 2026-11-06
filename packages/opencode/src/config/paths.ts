@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 export * as ConfigPaths from "./paths"
 
 import path from "path"
@@ -26,13 +27,13 @@ export const directories = Effect.fn("ConfigPaths.directories")(function* (direc
     Global.Path.config,
     ...(!Flag.OPENCODE_DISABLE_PROJECT_CONFIG
       ? yield* afs.up({
-          targets: [".blackbird"],
+          targets: [`.${Brand.name}`],
           start: directory,
           stop: worktree,
         })
       : []),
     ...(yield* afs.up({
-      targets: [".blackbird"],
+      targets: [`.${Brand.name}`],
       start: Global.Path.home,
       stop: Global.Path.home,
     })),
