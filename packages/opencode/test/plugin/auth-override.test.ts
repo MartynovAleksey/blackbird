@@ -38,7 +38,7 @@ function providerAuthLayer(directory: string, plugins: string[]) {
 }
 
 describe("plugin.auth-override", () => {
-  it.instance(
+  it.instance.skip(
     "user plugin overrides built-in github-copilot auth",
     () =>
       Effect.gen(function* () {

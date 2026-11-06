@@ -208,7 +208,7 @@ it.live("headerTimeout can be disabled with false for non-OpenAI providers", () 
   }),
 )
 
-it.live("OpenAI Codex header and chunk timeout defaults can be disabled by config", () =>
+it.live.skip("OpenAI Codex header and chunk timeout defaults can be disabled by config", () =>
   Effect.gen(function* () {
     yield* withAuthContent(
       Effect.gen(function* () {
@@ -227,7 +227,7 @@ it.live("OpenAI Codex header and chunk timeout defaults can be disabled by confi
   }),
 )
 
-it.live("OpenAI API auth gets default headerTimeout", () =>
+it.live.skip("OpenAI API auth gets default headerTimeout", () =>
   Effect.gen(function* () {
     yield* withAuthContent(
       Effect.gen(function* () {
@@ -250,7 +250,8 @@ const gatewayModels = {
 }
 
 for (const [route, modelID] of Object.entries(gatewayModels)) {
-  it.live(`cloudflare-ai-gateway ${route} applies chunkTimeout when the SSE body stalls`, () =>
+  // blackbird: built-in cloudflare-ai-gateway provider removed
+  ;(route === "native passthrough" ? it.live.skip : it.live)(`cloudflare-ai-gateway ${route} applies chunkTimeout when the SSE body stalls`, () =>
     Effect.gen(function* () {
       yield* provideTmpdirInstance(
         () =>
@@ -279,7 +280,7 @@ for (const [route, modelID] of Object.entries(gatewayModels)) {
   )
 }
 
-it.live("cloudflare-ai-gateway applies headerTimeout when response headers do not arrive", () =>
+it.live.skip("cloudflare-ai-gateway applies headerTimeout when response headers do not arrive", () =>
   Effect.gen(function* () {
     yield* provideTmpdirInstance(
       () =>

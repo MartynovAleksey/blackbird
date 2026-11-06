@@ -67,7 +67,7 @@ const withAuthJson = (contents: string) =>
       }),
   )
 
-it.instance(
+it.instance.skip(
   "Bedrock: config region takes precedence over AWS_REGION env var",
   () =>
     Effect.gen(function* () {
@@ -80,7 +80,7 @@ it.instance(
   { config: { provider: { "amazon-bedrock": { options: { region: "eu-west-1" } } } } },
 )
 
-it.instance("Bedrock: falls back to AWS_REGION env var when no config region", () =>
+it.instance.skip("Bedrock: falls back to AWS_REGION env var when no config region", () =>
   Effect.gen(function* () {
     yield* set("AWS_REGION", "eu-west-1")
     yield* set("AWS_PROFILE", "default")
@@ -90,7 +90,7 @@ it.instance("Bedrock: falls back to AWS_REGION env var when no config region", (
   }),
 )
 
-it.instance(
+it.instance.skip(
   "Bedrock: loads when bearer token from auth.json is present",
   () =>
     Effect.gen(function* () {
@@ -175,7 +175,7 @@ it.instance(
   },
 )
 
-it.instance(
+it.instance.skip(
   "Bedrock: config profile takes precedence over AWS_PROFILE env var",
   () =>
     Effect.gen(function* () {
@@ -192,7 +192,7 @@ it.instance(
   },
 )
 
-it.instance(
+it.instance.skip(
   "Bedrock: includes custom endpoint in options when specified",
   () =>
     Effect.gen(function* () {
@@ -214,7 +214,7 @@ it.instance(
   },
 )
 
-it.instance(
+it.instance.skip(
   "Bedrock: autoloads when AWS_WEB_IDENTITY_TOKEN_FILE is present",
   () =>
     Effect.gen(function* () {

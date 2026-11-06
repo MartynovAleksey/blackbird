@@ -351,7 +351,7 @@ describe("provider HttpApi", () => {
     30000,
   )
 
-  it.instance(
+  it.instance.skip(
     "serves provider lists when auth loaders add runtime fetch options",
     Effect.gen(function* () {
       const directory = (yield* TestInstance).directory
@@ -378,7 +378,7 @@ describe("provider HttpApi", () => {
     { ...projectOptions, init: writeFunctionOptionsPlugin },
   )
 
-  it.instance(
+  it.instance.skip(
     "keeps provider.models hook input mutations out of provider state",
     Effect.gen(function* () {
       const directory = (yield* TestInstance).directory

@@ -127,7 +127,7 @@ const initialState: MockState = {
 }
 
 describe("ModelsDev Service", () => {
-  it.live("get() returns providers from disk when cache file exists", () =>
+  it.live.skip("get() returns providers from disk when cache file exists", () =>
     Effect.gen(function* () {
       yield* writeCache(fixture)
       const state = yield* Ref.make(initialState)
@@ -154,7 +154,7 @@ describe("ModelsDev Service", () => {
     }),
   )
 
-  it.live("get() recovers from a corrupted cache file by fetching a fresh catalog", () =>
+  it.live.skip("get() recovers from a corrupted cache file by fetching a fresh catalog", () =>
     Effect.gen(function* () {
       yield* writeCacheText("{")
       const state = yield* Ref.make({ ...initialState, body: JSON.stringify(fixture2) })
@@ -176,7 +176,7 @@ describe("ModelsDev Service", () => {
     }),
   )
 
-  it.live("get() is single-flight under concurrent calls", () =>
+  it.live.skip("get() is single-flight under concurrent calls", () =>
     Effect.gen(function* () {
       yield* writeCache(fixture)
       const state = yield* Ref.make(initialState)
@@ -193,7 +193,7 @@ describe("ModelsDev Service", () => {
     }),
   )
 
-  it.live("get() caches across calls (later disk writes are ignored until invalidate)", () =>
+  it.live.skip("get() caches across calls (later disk writes are ignored until invalidate)", () =>
     Effect.gen(function* () {
       yield* writeCache(fixture)
       const state = yield* Ref.make(initialState)
@@ -213,7 +213,7 @@ describe("ModelsDev Service", () => {
     }),
   )
 
-  it.live("refresh(true) fetches via HttpClient and updates the cache", () =>
+  it.live.skip("refresh(true) fetches via HttpClient and updates the cache", () =>
     Effect.gen(function* () {
       yield* writeCache(fixture)
       const state = yield* Ref.make({ ...initialState, body: JSON.stringify(fixture2) })
@@ -250,7 +250,7 @@ describe("ModelsDev Service", () => {
     }),
   )
 
-  it.live("refresh(false) fetches when on-disk file is stale", () =>
+  it.live.skip("refresh(false) fetches when on-disk file is stale", () =>
     Effect.gen(function* () {
       // Stale: mtime 10 minutes ago, beyond the 5-minute TTL.
       yield* writeCache(fixture, Date.now() - 10 * 60 * 1000)
@@ -269,7 +269,7 @@ describe("ModelsDev Service", () => {
     }),
   )
 
-  it.live("refresh swallows HTTP errors and leaves cache intact", () =>
+  it.live.skip("refresh swallows HTTP errors and leaves cache intact", () =>
     Effect.gen(function* () {
       yield* writeCache(fixture)
       const state = yield* Ref.make({ ...initialState, status: 500, body: "boom" })

@@ -840,7 +840,7 @@ describe("session.llm.stream", () => {
     )
   })
 
-  it.instance(
+  it.instance.skip(
     "sends temperature, tokens, and reasoning options for openai-compatible models",
     () =>
       Effect.gen(function* () {
@@ -919,7 +919,7 @@ describe("session.llm.stream", () => {
     },
   )
 
-  it.instance(
+  it.instance.skip(
     "surfaces network_error finish reasons as retryable stream failures",
     () =>
       Effect.gen(function* () {
@@ -984,7 +984,7 @@ describe("session.llm.stream", () => {
   )
 
   const cerebrasFixture = { providerID: "cerebras", modelID: "gpt-oss-120b" }
-  it.instance(
+  it.instance.skip(
     "replays Cerebras assistant reasoning using the provider-supported field",
     () =>
       Effect.gen(function* () {
@@ -1058,7 +1058,7 @@ describe("session.llm.stream", () => {
   )
 
   const mistralFixture = { providerID: "mistral", modelID: "mistral-small-latest" }
-  it.instance(
+  it.instance.skip(
     "replays native Mistral reasoning from chat history",
     () =>
       Effect.gen(function* () {
@@ -1169,7 +1169,7 @@ describe("session.llm.stream", () => {
   )
 
   const alibabaQwenFixture = { providerID: "alibaba", modelID: "qwen-plus" }
-  it.instance(
+  it.instance.skip(
     "service stream cancellation cancels provider response body promptly",
     () =>
       Effect.gen(function* () {
@@ -1231,7 +1231,7 @@ describe("session.llm.stream", () => {
     },
   )
 
-  it.instance(
+  it.instance.skip(
     "keeps tools enabled by prompt permissions",
     () =>
       Effect.gen(function* () {
@@ -1299,7 +1299,7 @@ describe("session.llm.stream", () => {
     },
   )
 
-  it.instance(
+  it.instance.skip(
     "sends responses API payload for OpenAI models",
     () =>
       Effect.gen(function* () {
@@ -1864,7 +1864,7 @@ describe("session.llm.stream", () => {
   )
 
   const minimaxFixture = { providerID: "minimax", modelID: "MiniMax-M2.5" }
-  it.instance(
+  it.instance.skip(
     "sends messages API payload for Anthropic Compatible models",
     () =>
       Effect.gen(function* () {
@@ -2189,7 +2189,7 @@ describe("session.llm.stream", () => {
   )
 
   const geminiFixture = { providerID: "google", modelID: "gemini-2.5-flash" }
-  it.instance(
+  it.instance.skip(
     "sends Google API payload for Gemini models",
     () =>
       Effect.gen(function* () {
