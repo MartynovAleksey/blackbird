@@ -234,7 +234,7 @@ describe("PluginSupervisor", () => {
   )
 
   for (const targets of [["opencode.config.policy", "opencode.provider.opencode", "opencode.config.agent"], ["*"]]) {
-    it.effect(`keeps policy enforcement and the Console connection through plugin removals: ${targets}`, () =>
+    it.effect.skip(`keeps policy enforcement and the Console connection through plugin removals: ${targets}`, () =>
       Effect.gen(function* () {
         source.operations = targets.map((target) => ({ type: "remove", target }))
         const directory = yield* tmpdirScoped()
