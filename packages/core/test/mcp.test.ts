@@ -274,7 +274,7 @@ function resourceServer(
             state.toolCalls.push({
               name: request.params.name,
               arguments: request.params.arguments,
-              sessionID: request.params._meta?.["ai.blackbird/sessionID"],
+              sessionID: request.params._meta?.["ai.opencode/sessionID"],
               progressToken: request.params._meta?.progressToken,
             })
             const structured = request.params.arguments?.structured

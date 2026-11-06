@@ -18,7 +18,7 @@ describe("ConfigWatch.plan", () => {
   test("groups missing candidates and keeps parent watches when roots appear", () => {
     const missing = ConfigWatch.plan(sources)
     expect(Array.from(missing.values())).toEqual([
-      { path: project, type: "entries", names: [".agents", ".claude", ".blackbird", "blackbird.json", "blackbird.jsonc"] },
+      { path: project, type: "entries", names: [".agents", ".blackbird", ".claude", "blackbird.json", "blackbird.jsonc"] },
     ])
     const system = AbsolutePath.make(path.join(project, "system-opencode"))
     const present = ConfigWatch.plan({
@@ -32,7 +32,7 @@ describe("ConfigWatch.plan", () => {
       {
         path: project,
         type: "entries",
-        names: [".agents", ".claude", ".blackbird", "blackbird.json", "blackbird.jsonc", "system-opencode"],
+        names: [".agents", ".blackbird", ".claude", "blackbird.json", "blackbird.jsonc", "system-opencode"],
       },
     ])
   })
