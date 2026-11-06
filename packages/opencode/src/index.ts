@@ -1,4 +1,5 @@
 import "./blackbird-env"
+import "./blackbird-import"
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import { RunCommand } from "./cli/cmd/run"
