@@ -25,7 +25,7 @@ export const retain = Effect.fnUntraced(function* (directory: string, role: "ser
           yield* fs.remove(path.join(directory, name)).pipe(Effect.ignore)
         }),
       )
-      const target = path.join(directory, `opencode-${role}-${process.pid}-${randomBytes(4).toString("hex")}.exe`)
+      const target = path.join(directory, `blackbird-${role}-${process.pid}-${randomBytes(4).toString("hex")}.exe`)
       const executable = yield* fs.realPath(process.execPath).pipe(Effect.orElseSucceed(() => process.execPath))
       return yield* fs.link(executable, target).pipe(
         Effect.as(target),
