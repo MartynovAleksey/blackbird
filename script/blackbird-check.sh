@@ -57,6 +57,7 @@ bb "$bin" --version >/dev/null || fail "--version"
 help=$(bb "$bin" --help 2>&1 || true)
 grep -qi blackbird <<<"$help" || fail "--help не упоминает blackbird"
 grep -qi opencode <<<"$help" && fail "--help упоминает opencode"
+grep -q "█▀▀█ █▀▀█ █▀▀█ █▀▀▄" <<<"$help" && fail "--help печатает лого opencode"
 
 models=$(cd "$t/p" && bb OPENAI_API_KEY=sk-check ANTHROPIC_API_KEY=sk-check "$bin" models $standalone 2>/dev/null || true)
 [ "$models" = bbcheck/m1 ] || fail "ожидался только bbcheck/m1 из BLACKBIRD_CONFIG_DIR/blackbird.json, получено: $(head -5 <<<"$models" | tr '\n' ' ')"

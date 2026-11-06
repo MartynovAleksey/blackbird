@@ -41,7 +41,7 @@ function withFormatter<A, E, R>(
 ) {
   return withTemp((directory) =>
     Effect.promise(() =>
-      fs.writeFile(path.join(directory, "opencode.json"), JSON.stringify({ formatter: configured })),
+      fs.writeFile(path.join(directory, "blackbird.json"), JSON.stringify({ formatter: configured })),
     ).pipe(
       Effect.andThen(
         Effect.gen(function* () {
@@ -75,11 +75,11 @@ function withLayers<A, E, R>(
     Effect.gen(function* () {
       const global = yield* Global.Service
       yield* Effect.promise(async () => {
-        await fs.mkdir(path.join(directory, ".opencode"))
+        await fs.mkdir(path.join(directory, ".blackbird"))
         const files = [
-          path.join(global.config, "opencode.jsonc"),
-          path.join(directory, "opencode.json"),
-          path.join(directory, ".opencode", "opencode.jsonc"),
+          path.join(global.config, "blackbird.jsonc"),
+          path.join(directory, "blackbird.json"),
+          path.join(directory, ".blackbird", "blackbird.jsonc"),
         ]
         await Promise.all(layers.map((formatter, index) => fs.writeFile(files[index], JSON.stringify({ formatter }))))
       })
