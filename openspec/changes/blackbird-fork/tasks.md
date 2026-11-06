@@ -1,7 +1,7 @@
 ## 1. Каркас форка
 
-- [x] 1.1 Remote `upstream` → `https://github.com/anomalyco/opencode.git`, `git fetch upstream v1 dev`
-- [x] 1.2 Создать ветки `blackbird/v1` от `upstream/v1` и `blackbird/v2` от `upstream/dev` (pushRemote → `origin`)
+- [x] 1.1 Remote `upstream` → `https://github.com/anomalyco/opencode.git`, fetch тегов `v1.19.5` и `v2.2.5`
+- [x] 1.2 Создать ветки `blackbird/v1` от тега `v1.19.5` и `blackbird/v2` от тега `v2.2.5` (push → `origin`)
 - [x] 1.3 `blackbird/v2` в корне клона, `git worktree add ../blackbird-v1 blackbird/v1`
 - [x] 1.4 Проверить, что обе ветки ставятся и собираются без изменений (`bun install`, сборка CLI); зафиксировать команды сборки в README
 
@@ -42,7 +42,7 @@
 
 ## 7. Синхронизация с апстримом
 
-- [x] 6.1 `script/blackbird-sync` в каждой ветке: fetch, merge апстрим-ветки текущей линии, при конфликте остановиться со списком файлов, иначе запустить `blackbird-check.sh`
+- [x] 6.1 `script/blackbird-sync <tag>` в каждой ветке: проверка линии тега, fetch тега, merge, при конфликте остановиться со списком файлов, иначе запустить `blackbird-check.sh`
 - [x] 6.2 Проверить, что `git diff --name-status upstream/<branch>...blackbird/<line>` не содержит `D`/`R` в обеих линиях
 - [x] 6.3 Закоммитить openspec в `blackbird/v2`, push обеих веток в `origin`
 - [x] 6.4 Пробный sync на свежем апстриме для обеих линий; описать процедуру и разбор конфликтов в README
