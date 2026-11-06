@@ -1,3 +1,4 @@
+import { Brand } from "./brand"
 import path from "path"
 import { Context, Duration, Effect, Layer, Option, Schedule, Schema } from "effect"
 import { FetchHttpClient, HttpClient, HttpClientRequest } from "effect/unstable/http"
@@ -145,8 +146,8 @@ export class Service extends Context.Service<Service, Interface>()("@opencode/Mo
 const layer = Layer.effect(
   Service,
   Effect.gen(function* () {
-    // blackbird: no models catalog (no fetch, no bundled snapshot); models come only from config.
-    if (true as boolean) return Service.of({ get: () => Effect.succeed({}), refresh: () => Effect.void })
+    // blackbird: no models catalog (no fetch, no bundled snapshot) unless --opencode-compatible; models come from config.
+    if (!Brand.compat) return Service.of({ get: () => Effect.succeed({}), refresh: () => Effect.void })
     const fs = yield* FSUtil.Service
     const events = yield* EventV2.Service
     const http = HttpClient.filterStatusOk(

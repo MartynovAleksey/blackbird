@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 import { isRecord } from "./record"
 
 type ConfigIssue = { message: string; path: string[] }
@@ -25,7 +26,7 @@ export function cliErrorMessage(input: unknown): string | undefined {
       `Model not found: ${field(model, "providerID")}/${field(model, "modelID")}`,
       ...(suggestions.length ? ["Did you mean: " + suggestions.join(", ")] : []),
       "Try: `opencode models` to list available models",
-      "Or check your config (blackbird.json) provider/model names",
+      `Or check your config (${Brand.name}.json) provider/model names`,
     ].join("\n")
   }
 

@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 import { cmd } from "./cmd"
 import { ConfigV1 } from "@opencode-ai/core/v1/config/config"
 import { effectCmd } from "../effect-cmd"
@@ -393,10 +394,10 @@ export const McpLogoutCommand = effectCmd({
 
 async function resolveConfigPath(baseDir: string, global = false) {
   // Check for existing config files (prefer .jsonc over .json, check .opencode/ subdirectory too)
-  const candidates = [path.join(baseDir, "blackbird.json"), path.join(baseDir, "blackbird.jsonc")]
+  const candidates = [path.join(baseDir, `${Brand.name}.json`), path.join(baseDir, `${Brand.name}.jsonc`)]
 
   if (!global) {
-    candidates.push(path.join(baseDir, ".blackbird", "blackbird.json"), path.join(baseDir, ".blackbird", "blackbird.jsonc"))
+    candidates.push(path.join(baseDir, `.${Brand.name}`, `${Brand.name}.json`), path.join(baseDir, `.${Brand.name}`, `${Brand.name}.jsonc`))
   }
 
   for (const candidate of candidates) {

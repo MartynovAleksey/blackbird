@@ -38,8 +38,12 @@ bb() {
   env -i PATH="$PATH" HOME="$t/h" TMPDIR="$t/t" TERM=dumb \
     BLACKBIRD_MODELS_URL="http://127.0.0.1:$port" BLACKBIRD_CONFIG_DIR="$t/cfg" "$@"
 }
+bbc() { # режим совместимости: свой пустой HOME, конфиг opencode в $t/oc
+  env -i PATH="$PATH" HOME="$t/h2" TMPDIR="$t/t" TERM=dumb BLACKBIRD_MODELS_URL="http://127.0.0.1:$port" "$@"
+}
 cleanup() {
   bb "$bin" service stop >/dev/null 2>&1 || true
+  bbc "$bin" --opencode-compatible service stop >/dev/null 2>&1 || true
   kill "$stub" 2>/dev/null || true
   rm -rf "$t"
 }
@@ -69,6 +73,20 @@ found=$(find "$t" -iname '*opencode*' -not -path "$t/p/.git/*" | sed "s|^$t||")
 [ -z "$found" ] || fail "пути с opencode:"$'\n'"$found"
 catalog=$(grep -v '^/v1/' "$t/hits" 2>/dev/null || true)
 [ -z "$catalog" ] || fail "запросы каталога моделей: $(tr '\n' ' ' <<<"$catalog")"
+
+# --opencode-compatible: конфиг и каталоги opencode, встроенные провайдеры, ни одного пути blackbird.
+mkdir -p "$t/h2" "$t/oc"
+cat >"$t/oc/opencode.json" <<EOF
+{"provider":{"bbcompat":{"npm":"@ai-sdk/openai-compatible","name":"bbcompat",
+  "options":{"baseURL":"http://127.0.0.1:$port/v1","apiKey":"x"},"models":{"m1":{"name":"m1"}}}}}
+EOF
+models=$(cd "$t/p" && bbc ANTHROPIC_API_KEY=sk-check "$bin" --opencode-compatible="$t/oc" models $standalone 2>/dev/null || true)
+grep -qx bbcompat/m1 <<<"$models" || fail "--opencode-compatible не видит провайдера из opencode.json каталога конфигурации"
+grep -q '^anthropic/' <<<"$models" || fail "--opencode-compatible не включает встроенные провайдеры"
+bbc "$bin" --opencode-compatible service stop >/dev/null 2>&1 || true
+found=$(find "$t/h2" "$t/oc" -iname "*blackbird*" -not -name "opencode-*" | sed "s|^$t||")
+[ -z "$found" ] || fail "--opencode-compatible создал пути blackbird:"$'\n'"$found"
+[ -d "$t/h2/.local/share/opencode" ] || fail "--opencode-compatible не использует каталог данных opencode"
 
 [ $status = 0 ] && echo "OK: $bin"
 exit $status

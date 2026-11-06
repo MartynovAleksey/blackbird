@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 import path from "path"
 import {
   type ParseError as JsoncParseError,
@@ -31,7 +32,7 @@ export type PatchDeps = {
   readText: (file: string) => Promise<string>
   write: (file: string, text: string) => Promise<void>
   exists: (file: string) => Promise<boolean>
-  files: (dir: string, name: "blackbird" | "tui") => string[]
+  files: (dir: string, name: string) => string[]
 }
 
 export type PatchInput = {
@@ -334,11 +335,11 @@ function patchDir(input: PatchInput) {
   if (input.global) return input.config ?? Global.Path.config
   const git = input.vcs === "git" && input.worktree !== "/"
   const root = git ? input.worktree : input.directory
-  return path.join(root, ".blackbird")
+  return path.join(root, `.${Brand.name}`)
 }
 
-function patchName(kind: Kind): "blackbird" | "tui" {
-  if (kind === "server") return "blackbird"
+function patchName(kind: Kind): string {
+  if (kind === "server") return Brand.name
   return "tui"
 }
 

@@ -1,3 +1,4 @@
+import { Brand } from "../brand"
 import { Formatter, Logger, type LogLevel } from "effect"
 import path from "path"
 import { Global } from "../global"
@@ -46,7 +47,7 @@ function format(input: unknown) {
   return /^[^\s="\\]+$/.test(value) ? value : JSON.stringify(value)
 }
 
-export function fileLogger(file = path.join(Global.Path.log, "blackbird.log"), id: string = runID) {
+export function fileLogger(file = path.join(Global.Path.log, `${Brand.name}.log`), id: string = runID) {
   // Do not set batchWindow to 0; it causes high idle CPU usage.
   return Logger.toFile(formatter(id), file, { flag: "a" })
 }

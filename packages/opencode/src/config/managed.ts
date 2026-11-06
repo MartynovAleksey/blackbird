@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 export * as ConfigManaged from "./managed"
 
 import { existsSync } from "fs"
@@ -20,11 +21,11 @@ const PLIST_META = new Set([
 function systemManagedConfigDir(): string {
   switch (process.platform) {
     case "darwin":
-      return "/Library/Application Support/blackbird"
+      return `/Library/Application Support/${Brand.name}`
     case "win32":
-      return path.join(process.env.ProgramData || "C:\\ProgramData", "blackbird")
+      return path.join(process.env.ProgramData || "C:\\ProgramData", Brand.name)
     default:
-      return "/etc/blackbird"
+      return `/etc/${Brand.name}`
   }
 }
 

@@ -1,3 +1,4 @@
+import { Brand } from "../brand"
 export * as AgentPlugin from "./agent"
 
 import path from "path"
@@ -139,7 +140,7 @@ export const Plugin = define({
             { action: "plan_exit", resource: "*", effect: "allow" },
             { action: "external_directory", resource: path.join(Global.Path.data, "plans", "*"), effect: "allow" },
             { action: "edit", resource: "*", effect: "deny" },
-            { action: "edit", resource: path.join(".blackbird", "plans", "*.md"), effect: "allow" },
+            { action: "edit", resource: path.join(`.${Brand.name}`, "plans", "*.md"), effect: "allow" },
             {
               action: "edit",
               resource: path.relative(worktree, path.join(Global.Path.data, "plans", "*.md")),
