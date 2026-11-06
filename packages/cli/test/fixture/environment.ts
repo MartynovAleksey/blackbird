@@ -13,7 +13,7 @@ export function isolatedEnv(root: string, overrides: Record<string, string | und
     OPENCODE_CLI_CONFIG_CONTENT: undefined,
     OPENCODE_CONFIG_CONTENT: "{}",
     OPENCODE_CONFIG_DIR: path.join(root, "config"),
-    OPENCODE_DB: path.join(root, "opencode.db"),
+    OPENCODE_DB: path.join(root, "blackbird.db"),
     OPENCODE_DISABLE_FILEWATCHER: "true",
     OPENCODE_DISABLE_MODELS_FETCH: "true",
     OPENCODE_TEST_HOME: root,

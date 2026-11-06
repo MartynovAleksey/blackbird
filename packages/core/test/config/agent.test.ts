@@ -231,8 +231,8 @@ permissions:
 
       const build = yield* agents.get(Agent.defaultID)
       if (!build) throw new Error("expected configured build agent")
-      const opencodeData = path.join(global.home, ".local", "share", "opencode", "*")
-      const mcpAuth = path.join(global.home, ".local", "share", "opencode", "mcp-auth.json")
+      const opencodeData = path.join(global.home, ".local", "share", "blackbird", "*")
+      const mcpAuth = path.join(global.home, ".local", "share", "blackbird", "mcp-auth.json")
       expect(build.permissions).toEqual([
         ...defaultPermissions,
         { action: "question", resource: "*", effect: "allow" },
@@ -685,7 +685,7 @@ Mixed fields.`,
           )
 
           yield* configTest.emitChange({ type: "create", path: path.join(tmp.path, "commands", "review.md") })
-          yield* configTest.emitChange({ type: "update", path: path.join(tmp.path, "opencode.json") })
+          yield* configTest.emitChange({ type: "update", path: path.join(tmp.path, "blackbird.json") })
           yield* drain
           expect(reloads).toBe(0)
 
