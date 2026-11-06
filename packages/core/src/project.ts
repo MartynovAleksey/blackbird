@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 export * as Project from "./project.js"
 
 import { Cache, Context, Duration, Effect, Layer, Schedule, Schema, Scope } from "effect"
@@ -307,7 +308,7 @@ const layer = Layer.effect(
       })
 
     const cached = Effect.fnUntraced(function* (dir: string) {
-      return yield* fs.readFileString(path.join(dir, "blackbird")).pipe(
+      return yield* fs.readFileString(path.join(dir, Brand.name)).pipe(
         Effect.map((value) => value.trim()),
         Effect.map((value) => (value ? ID.make(value) : undefined)),
         Effect.orElseSucceed(() => undefined),

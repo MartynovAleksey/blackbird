@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 import { EOL } from "node:os"
 import path from "node:path"
 import { readFile, stat, writeFile } from "node:fs/promises"
@@ -39,10 +40,10 @@ export default Runtime.handler(
 
 export async function resolveConfigPath(directory: string) {
   const candidates = [
-    path.join(directory, "blackbird.json"),
-    path.join(directory, "blackbird.jsonc"),
-    path.join(directory, ".blackbird", "blackbird.json"),
-    path.join(directory, ".blackbird", "blackbird.jsonc"),
+    path.join(directory, `${Brand.name}.json`),
+    path.join(directory, `${Brand.name}.jsonc`),
+    path.join(directory, `.${Brand.name}`, `${Brand.name}.json`),
+    path.join(directory, `.${Brand.name}`, `${Brand.name}.jsonc`),
   ]
   for (const candidate of candidates) {
     if (
