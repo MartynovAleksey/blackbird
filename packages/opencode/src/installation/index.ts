@@ -304,6 +304,8 @@ const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProcess.Serv
         }).pipe(Effect.timeout("10 seconds"))
       }, Effect.orDie),
       upgrade: Effect.fn("Installation.upgrade")(function* (m: Method, target: string) {
+        if (true as boolean)
+          return yield* new UpgradeFailedError({ stderr: "blackbird: upgrade from opencode releases is disabled; update via script/blackbird-sync" })
         if (semver.valid(target) && semver.major(target) >= 2)
           return yield* new UpgradeFailedError({
             stderr: `OpenCode ${target} is OpenCode 2. Upgrade with \`opencode upgrade --major\` or see ${MAJOR_INSTRUCTIONS}`,
@@ -376,6 +378,8 @@ const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProcess.Serv
         yield* text([process.execPath, "--version"])
       }),
       upgradeMajor: Effect.fn("Installation.upgradeMajor")(function* (m: Method) {
+        if (true as boolean)
+          return yield* new UpgradeFailedError({ stderr: "blackbird: upgrade from opencode releases is disabled; update via script/blackbird-sync" })
         const outcome = yield* majorUpgrade(m)
         if (outcome.code !== 0) return yield* new UpgradeFailedError({ stderr: upgradeFailure(m, outcome) })
         yield* Effect.logInfo("upgraded major", { method: m, stdout: outcome.stdout, stderr: outcome.stderr })
