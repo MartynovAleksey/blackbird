@@ -3,6 +3,7 @@ export * as CommandPlugin from "./command"
 import { define } from "./internal"
 import { Effect } from "effect"
 import { Location } from "../location"
+import { Brand } from "../brand"
 import PROMPT_INITIALIZE from "./command/initialize.txt"
 import PROMPT_REVIEW from "./command/review.txt"
 
@@ -12,7 +13,7 @@ export const Plugin = define({
     const location = yield* Location.Service
     yield* ctx.command.transform((draft) => {
       draft.update("init", (command) => {
-        command.template = PROMPT_INITIALIZE.replace("${path}", location.project.directory)
+        command.template = Brand.prompt(PROMPT_INITIALIZE).replace("${path}", location.project.directory)
         command.description = "guided AGENTS.md setup"
       })
       draft.update("review", (command) => {
