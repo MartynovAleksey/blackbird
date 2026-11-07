@@ -7,3 +7,12 @@ export const compat =
   process.env.BLACKBIRD_OPENCODE_COMPATIBLE === "1" ||
   process.argv.some((arg) => arg === "--opencode-compatible" || arg.startsWith("--opencode-compatible="))
 export const name = compat ? "opencode" : "blackbird"
+
+// blackbird: built-in prompts call the agent and its files "opencode"; rename them so the model says it is blackbird
+// and edits blackbird.json. URLs, @opencode/* packages, opencode-* plugin names and OPENCODE_* vars stay as is.
+export const prompt = (text: string) =>
+  compat
+    ? text
+    : text.replace(/https?:\/\/\S+|(?<![@\w-])(?:opencode|OpenCode)(?![\w-]|\.ai)/g, (m) =>
+        m.startsWith("http") ? m : name,
+      )

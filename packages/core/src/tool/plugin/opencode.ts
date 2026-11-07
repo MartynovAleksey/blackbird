@@ -7,6 +7,7 @@ import { Model } from "@opencode/schema/model"
 import { AbsolutePath } from "@opencode/schema/schema"
 import { Session } from "@opencode/schema/session"
 import { Effect, Schema } from "effect"
+import { Brand } from "@opencode/util/brand"
 import { FileAccess } from "../../file-access.js"
 import { Git } from "../../git.js"
 import { Permission } from "../../permission.js"
@@ -111,8 +112,9 @@ export const Plugin = {
       .transform((draft) => {
         draft.namespace({
           name: "opencode",
-          description:
+          description: Brand.prompt(
             "Tools for managing OpenCode itself, such as working with sessions and worktrees, searching the available models, and reading MCP resources.",
+          ),
         })
         draft.add({
           name: "session_rename",
