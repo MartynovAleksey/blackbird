@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 import { describe, expect } from "bun:test"
 import { Effect, Layer } from "effect"
 import { Command } from "@opencode/core/command"
@@ -112,7 +113,7 @@ describe("CommandPlugin.Plugin", () => {
       })
       expect(prompts).toEqual([
         {
-          text: PROMPT_INITIALIZE.replace("${path}", project).replaceAll("$ARGUMENTS", "extra context"),
+          text: Brand.prompt(PROMPT_INITIALIZE).replace("${path}", project).replaceAll("$ARGUMENTS", "extra context"),
           files: [{ uri: "file:///tmp/context.md" }],
           delivery: "queue",
         },
@@ -122,7 +123,7 @@ describe("CommandPlugin.Plugin", () => {
           delivery: "steer",
         },
         {
-          text: PROMPT_INITIALIZE.replace("${path}", project).replaceAll("$ARGUMENTS", ""),
+          text: Brand.prompt(PROMPT_INITIALIZE).replace("${path}", project).replaceAll("$ARGUMENTS", ""),
           files: undefined,
           delivery: "steer",
         },
