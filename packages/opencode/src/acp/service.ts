@@ -30,6 +30,7 @@ import {
   type SetSessionModeResponse,
 } from "@agentclientprotocol/sdk"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
+import { Brand } from "@opencode-ai/core/brand"
 import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder"
 import type { AssistantMessage, Message, OpencodeClient, Session, SessionMessageResponse } from "@opencode-ai/sdk/v2"
 import { Context, Effect, Layer, ManagedRuntime } from "effect"
@@ -94,17 +95,17 @@ export function make(input: {
   const initialize = Effect.fn("ACP.initialize")(function* (params: InitializeRequest) {
     const started = performance.now()
     const authMethod: AuthMethod = {
-      description: "Run `opencode auth login` in the terminal",
-      name: "Login with opencode",
+      description: "Run `blackbird auth login` in the terminal",
+      name: "Login with blackbird",
       id: AuthMethodID,
     }
 
     if (params.clientCapabilities?._meta?.["terminal-auth"] === true) {
       authMethod._meta = {
         "terminal-auth": {
-          command: "opencode",
-          args: ["auth", "login"],
-          label: "OpenCode Login",
+          command: "blackbird",
+          args: Brand.compat ? ["--opencode-compatible", "auth", "login"] : ["auth", "login"],
+          label: "blackbird Login",
         },
       }
     }
@@ -130,7 +131,7 @@ export function make(input: {
       },
       authMethods: [authMethod],
       agentInfo: {
-        name: "OpenCode",
+        name: "blackbird",
         version: InstallationVersion,
       },
     }
@@ -889,7 +890,7 @@ const promptResponse = Effect.fn("ACP.promptResponse")(function* (
 
 function promptErrorMessage(error: AssistantError) {
   if ("message" in error.data && typeof error.data.message === "string") return error.data.message
-  return "OpenCode prompt failed"
+  return "blackbird prompt failed"
 }
 
 function sendUsageUpdate(
@@ -1188,7 +1189,7 @@ function fromUnknownError(error: unknown, service?: string): Error {
   if (isAuthRequired(error)) {
     return new ACPError.AuthRequiredError({ providerId: findProviderID(error) })
   }
-  return new ACPError.ServiceFailureError({ safeMessage: "OpenCode service failure", service })
+  return new ACPError.ServiceFailureError({ safeMessage: "blackbird service failure", service })
 }
 
 function isACPError(error: unknown): error is Error {
