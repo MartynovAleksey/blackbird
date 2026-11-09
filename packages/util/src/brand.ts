@@ -16,3 +16,6 @@ export const prompt = (text: string) =>
     : text.replace(/https?:\/\/\S+|(?<![@\w-])(?:opencode|OpenCode)(?![\w-]|\.ai)/g, (m) =>
         m.startsWith("http") ? m : name,
       )
+
+// blackbird: shell command for hints like "Continue blackbird -s <id>"; the binary is always blackbird.
+export const command = compat ? "blackbird --opencode-compatible" : "blackbird"
