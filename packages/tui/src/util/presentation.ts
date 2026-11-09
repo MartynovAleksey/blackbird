@@ -1,3 +1,4 @@
+import { Brand } from "@opencode/util/brand"
 import { logo } from "../logo"
 
 const reset = "\x1b[0m"
@@ -33,10 +34,13 @@ export function epilogue(input: { readonly session?: SessionEpilogue; readonly u
     ...wordmark("  "),
     "",
     ...(input.updatedVersion
-      ? [`  ${dim}Run ${reset}${bold}opencode${reset}${dim} to use ${reset}${bold}${input.updatedVersion}${reset}`, ""]
+      ? [
+          `  ${dim}Run ${reset}${bold}${Brand.command}${reset}${dim} to use ${reset}${bold}${input.updatedVersion}${reset}`,
+          "",
+        ]
       : []),
     ...(input.session
-      ? [row("Session", input.session.title), row("Continue", `opencode -s ${input.session.sessionID}`), ""]
+      ? [row("Session", input.session.title), row("Continue", `${Brand.command} -s ${input.session.sessionID}`), ""]
       : []),
   ].join("\n")
 }
