@@ -72,6 +72,8 @@ export const Info = Schema.Struct({
   diff_style: Schema.optional(DiffStyle),
   cursor: Schema.optional(Cursor),
   mouse: Schema.optional(Schema.Boolean).annotate({ description: "Enable or disable mouse capture (default: true)" }),
+  // blackbird: IDE terminals that deliver Escape only via ctrl+esc name that key here; keybinds are unchanged.
+  interrupt_hint: Schema.optional(Schema.String).annotate({ description: "Key text shown in the interrupt hint" }),
 })
 export type Info = Schema.Schema.Type<typeof Info>
 
