@@ -17,6 +17,7 @@ import {
   type ScrollbackSnapshot,
   type ScrollbackWriter,
 } from "@opentui/core"
+import { Brand } from "@opencode-ai/core/brand"
 import * as Locale from "@/util/locale"
 import { go } from "@/cli/logo"
 import type { RunSplashTheme } from "./theme"
@@ -194,7 +195,7 @@ function build(input: SplashWriterInput, kind: "entry" | "exit", ctx: Scrollback
       })
     }
 
-    push(lines, body_left, top, "OpenCode", right, undefined, TextAttributes.BOLD)
+    push(lines, body_left, top, "blackbird", right, undefined, TextAttributes.BOLD)
     if (input.detail) {
       push(
         lines,
@@ -234,7 +235,7 @@ function build(input: SplashWriterInput, kind: "entry" | "exit", ctx: Scrollback
       lines,
       body_left + label.length,
       top + 1,
-      `opencode --mini -s ${meta.session_id}`,
+      `${Brand.command} --mini -s ${meta.session_id}`,
       right,
       undefined,
       TextAttributes.BOLD,

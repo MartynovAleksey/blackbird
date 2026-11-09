@@ -1,3 +1,4 @@
+import { Brand } from "@opencode-ai/core/brand"
 const logo = {
   left: ["▄    ▄           ▄   ", "█▀▀█ █ ▀▀▀█ █▀▀▀ █ ▄▀", "█__█ █ █▀▀█ █___ █▀▄ ", "▀▀▀▀ ▀ ▀▀▀▀ ▀▀▀▀ ▀  ▀"],
   right: ["▄              ▄", "█▀▀█ ▀ █▀▀▀ █▀▀█", "█__█ █ █    █__█", "▀▀▀▀ ▀ ▀    ▀▀▀▀"],
@@ -32,7 +33,7 @@ export function sessionEpilogue(input: { title: string; sessionID?: string }) {
     ...wordmark("  "),
     "",
     `  ${weak("Session")}${bold}${input.title}${reset}`,
-    `  ${weak("Continue")}${bold}opencode -s ${input.sessionID}${reset}`,
+    `  ${weak("Continue")}${bold}${Brand.command} -s ${input.sessionID}${reset}`,
     "",
   ].join("\n")
 }
