@@ -219,7 +219,7 @@ export function RunFooterView(props: RunFooterViewProps) {
       return
     }
 
-    return interrupt() === "escape" ? "esc" : interrupt()
+    return props.tuiConfig.interrupt_hint || (interrupt() === "escape" ? "esc" : interrupt())
   })
   const runTheme = createMemo(() => props.theme())
   const theme = createMemo(() => runTheme().footer)

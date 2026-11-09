@@ -251,6 +251,8 @@ export const Info = Schema.Struct({
     description: "Experimental features that may change or be removed at any time",
   }),
   animations: Schema.optional(Schema.Boolean).annotate({ description: "Enable interface animations" }),
+  // blackbird: IDE terminals that deliver Escape only via ctrl+esc name that key here; keybinds are unchanged.
+  interrupt_hint: Schema.optional(Schema.String).annotate({ description: "Key text shown in the interrupt hint" }),
   highlights: Schema.optional(Schema.Boolean).annotate({
     description: "Show the release highlights once after OpenCode updates",
   }),

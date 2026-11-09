@@ -113,6 +113,7 @@ export function PromptInterruptStatus(props: {
   subdued: RGBA
   warning: RGBA
   flash?: RGBA
+  hint?: string
 }) {
   const ignition = createAnimatable(
     { level: 0 },
@@ -137,7 +138,7 @@ export function PromptInterruptStatus(props: {
 
   return (
     <text fg={props.armed ? armedColor() : props.text} wrapMode="none" truncate flexShrink={1}>
-      esc{" "}
+      {props.hint || "esc"}{" "}
       <span style={{ fg: props.armed ? armedColor() : props.subdued }}>
         {props.armed ? "again to interrupt" : "interrupt"}
       </span>
@@ -1932,6 +1933,7 @@ export function Prompt(props: PromptProps) {
                         subdued={theme.text.muted}
                         warning={theme.text.feedback.warning.base}
                         flash={theme.decrease(theme.text.feedback.warning.base, 2)}
+                        hint={config.interrupt_hint}
                       />
                     </box>
                   </Match>
