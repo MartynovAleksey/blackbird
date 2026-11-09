@@ -112,6 +112,23 @@ function fadeColor(color: RGBA, alpha: number) {
   return RGBA.fromValues(color.r, color.g, color.b, color.a * alpha)
 }
 
+export function PromptInterruptStatus(props: {
+  armed: boolean
+  hint?: string
+  text: RGBA
+  subdued: RGBA
+  primary: RGBA
+}) {
+  return (
+    <text fg={props.armed ? props.primary : props.text}>
+      {props.hint || "esc"}{" "}
+      <span style={{ fg: props.armed ? props.primary : props.subdued }}>
+        {props.armed ? "again to interrupt" : "interrupt"}
+      </span>
+    </text>
+  )
+}
+
 function hasEditorRangeSelection(selection: EditorSelection["ranges"][number]) {
   return (
     selection.selection.start.line !== selection.selection.end.line ||
@@ -1584,12 +1601,13 @@ export function Prompt(props: PromptProps) {
                     })()}
                   </box>
                 </box>
-                <text fg={store.interrupt > 0 ? theme.primary : theme.text}>
-                  esc{" "}
-                  <span style={{ fg: store.interrupt > 0 ? theme.primary : theme.textMuted }}>
-                    {store.interrupt > 0 ? "again to interrupt" : "interrupt"}
-                  </span>
-                </text>
+                <PromptInterruptStatus
+                  armed={store.interrupt > 0}
+                  hint={tuiConfig.interrupt_hint}
+                  text={theme.text}
+                  subdued={theme.textMuted}
+                  primary={theme.primary}
+                />
               </box>
             </Match>
             <Match when={workspace.notice()}>

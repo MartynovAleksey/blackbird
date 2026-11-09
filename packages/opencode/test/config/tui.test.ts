@@ -644,7 +644,7 @@ it.instance("OPENCODE_TUI_CONFIG provides settings when no project config exists
       const fs = yield* FSUtil.Service
       const test = yield* TestInstance
       const custom = path.join(test.directory, "custom-tui.json")
-      yield* fs.writeJson(custom, { theme: "from-env", diff_style: "stacked" })
+      yield* fs.writeJson(custom, { theme: "from-env", diff_style: "stacked", interrupt_hint: "ctrl+esc" })
 
       yield* withEnv(
         "OPENCODE_TUI_CONFIG",
@@ -653,6 +653,7 @@ it.instance("OPENCODE_TUI_CONFIG provides settings when no project config exists
           const config = yield* getTuiConfig(test.directory)
           expect(config.theme).toBe("from-env")
           expect(config.diff_style).toBe("stacked")
+          expect(config.interrupt_hint).toBe("ctrl+esc")
         }),
       )
     }),
