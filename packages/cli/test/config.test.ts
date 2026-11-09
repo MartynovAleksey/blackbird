@@ -89,6 +89,7 @@ test("merges inline CLI config content over the global config", async () => {
     keybinds: { "help.show": false },
     plugins: ["inline"],
     animations: false,
+    interrupt_hint: "ctrl+esc",
   })
 
   try {
@@ -108,6 +109,7 @@ test("merges inline CLI config content over the global config", async () => {
     expect(result.loaded.tabs).toEqual({ mode: "off", scope: "global" })
     expect(result.loaded.keybinds).toEqual({ "app.exit": "ctrl+q", "help.show": false })
     expect(result.loaded.plugins).toEqual(["inline"])
+    expect(result.loaded.interrupt_hint).toBe("ctrl+esc")
     expect(result.updated).toMatchObject({ animations: false, mouse: false })
     expect(await Bun.file(file).json()).toMatchObject({ animations: true, mouse: false })
   } finally {
