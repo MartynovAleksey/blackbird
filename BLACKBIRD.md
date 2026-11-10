@@ -17,6 +17,21 @@
 
 Нужен bun версии из `packageManager` в корневом `package.json`.
 
+## Сборка релиза в Docker
+
+Все платформы (darwin, linux, windows × arm64, x64) собираются в контейнере; на хосте нужен только Docker. Образ содержит только инструменты, исходники монтируются только для чтения, архивы и `SHA256SUMS` в формате релизов появляются в `./release`.
+
+```bash
+docker build --platform linux/arm64 -t blackbird-builder - < script/blackbird-release.Dockerfile
+docker run --rm --platform linux/arm64 -e VERSION=1.19.5.7 -v "$PWD":/src:ro -v "$PWD/release":/out \
+  -v blackbird-bun-cache:/cache blackbird-builder
+```
+
+- `--platform linux/arm64` — для Apple Silicon (под эмуляцией amd64 сборка идёт очень медленно); на Intel укажите `linux/amd64`. Набор целевых платформ от этого не зависит.
+- Образ пересобирать нужно только при смене версии bun в `packageManager`.
+- Без Docker то же делает `script/blackbird-release.sh <версия>` (нужен bun из `packageManager`).
+- Бинарники для macOS подписаны только ad-hoc.
+
 ## Провайдер
 
 ```jsonc
