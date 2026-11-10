@@ -31,6 +31,7 @@ docker run --rm --platform linux/arm64 -e VERSION=2.2.5.7 -v "$PWD":/src:ro -v "
 - Образ пересобирать нужно только при смене версии bun в `packageManager`.
 - Без Docker то же делает `script/blackbird-release.sh <версия>` (нужен bun из `packageManager`).
 - Бинарники для macOS подписаны только ad-hoc.
+- За корпоративным прокси, с зеркалом npm или в сети с подменой TLS-сертификатов (`SELF_SIGNED_CERT_IN_CHAIN`) скопируйте `script/blackbird-release.env.example`, раскомментируйте нужное и добавьте к `docker run` флаг `--env-file <файл>` (или передайте те же переменные через `-e`).
 
 ## Провайдер
 
