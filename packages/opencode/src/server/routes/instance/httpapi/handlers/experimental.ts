@@ -159,7 +159,7 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
     const sessionBackground = Effect.fn("ExperimentalHttpApi.sessionBackground")(function* (ctx: {
       params: { sessionID: SessionID }
     }) {
-      if (!flags.experimentalBackgroundSubagents) return false
+      // blackbird: users can background a blocking subagent ("send now") without the experimental flag.
       const jobs = (yield* background.list()).filter(
         (job) =>
           job.type === "task" &&

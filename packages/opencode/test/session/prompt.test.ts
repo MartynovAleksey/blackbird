@@ -822,6 +822,46 @@ it.instance("static loop consumes queued replies across turns", () =>
   }),
 )
 
+// blackbird: corrections to a running session (including a subagent) reach the model at the next step boundary.
+it.instance("loop delivers a prompt sent mid-step at the next step", () =>
+  Effect.gen(function* () {
+    const { llm } = yield* useServerConfig(providerCfg)
+    const prompt = yield* SessionPrompt.Service
+    const sessions = yield* Session.Service
+    const session = yield* sessions.create({
+      title: "Prompt correction",
+      permission: [{ permission: "*", pattern: "*", action: "allow" }],
+    })
+
+    yield* prompt.prompt({
+      sessionID: session.id,
+      agent: "build",
+      noReply: true,
+      parts: [{ type: "text", text: "start the work" }],
+    })
+
+    let release!: () => void
+    yield* llm.hold("working", new Promise<void>((resolve) => (release = resolve)))
+    yield* llm.text("adjusted")
+
+    const loop = yield* prompt.loop({ sessionID: session.id }).pipe(Effect.forkChild)
+    yield* llm.wait(1)
+    yield* prompt.prompt({
+      sessionID: session.id,
+      agent: "build",
+      noReply: true,
+      parts: [{ type: "text", text: "use the other approach" }],
+    })
+    release()
+
+    const result = yield* Fiber.join(loop)
+    expect(result.parts.some((part) => part.type === "text" && part.text === "adjusted")).toBe(true)
+    const hits = yield* llm.hits
+    expect(hits).toHaveLength(2)
+    expect(JSON.stringify(hits[1]?.body)).toContain("use the other approach")
+  }),
+)
+
 it.instance("loop continues when finish is tool-calls", () =>
   Effect.gen(function* () {
     const { llm } = yield* useServerConfig(providerCfg)

@@ -214,18 +214,17 @@ export function Session() {
     const index = messages().findIndex((message) => message.id === messageID)
     return index === -1 ? messages() : messages().slice(0, index)
   }
+  // blackbird: backgrounding a blocking subagent ("send now") does not need the experimental flag.
   const foregroundTasks = createMemo(() =>
-    sync.data.capabilities.experimentalBackgroundSubagents
-      ? messages().flatMap((message) =>
-          (sync.data.part[message.id] ?? []).filter(
-            (part): part is ToolPart =>
-              part.type === "tool" &&
-              part.tool === "task" &&
-              part.state.status === "running" &&
-              part.state.metadata?.background !== true,
-          ),
-        )
-      : [],
+    messages().flatMap((message) =>
+      (sync.data.part[message.id] ?? []).filter(
+        (part): part is ToolPart =>
+          part.type === "tool" &&
+          part.tool === "task" &&
+          part.state.status === "running" &&
+          part.state.metadata?.background !== true,
+      ),
+    ),
   )
   const permissions = createMemo(() => {
     if (session()?.parentID) return []
@@ -235,7 +234,13 @@ export function Session() {
     if (session()?.parentID) return []
     return children().flatMap((x) => sync.data.question[x.id] ?? [])
   })
-  const visible = createMemo(() => !session()?.parentID && permissions().length === 0 && questions().length === 0)
+  // blackbird: a running subagent accepts corrections; they reach it at its next step boundary.
+  const visible = createMemo(
+    () =>
+      (!session()?.parentID || (sync.data.session_status[route.sessionID]?.type ?? "idle") !== "idle") &&
+      permissions().length === 0 &&
+      questions().length === 0,
+  )
   const disabled = createMemo(() => permissions().length > 0 || questions().length > 0)
 
   const pending = createMemo(() => {
@@ -1448,7 +1453,6 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
             <span style={{ fg: theme.textMuted }}> view subagents</span>
             <Show
               when={
-                sync.data.capabilities.experimentalBackgroundSubagents &&
                 props.parts.some(
                   (x) =>
                     x.type === "tool" &&
@@ -1460,7 +1464,9 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
             >
               <span style={{ fg: theme.textMuted }}> · </span>
               {backgroundShortcut()}
-              <span style={{ fg: theme.textMuted }}> background</span>
+              <span style={{ fg: theme.textMuted }}>
+                {messages().some((x) => x.role === "user" && x.id > props.message.id) ? " send now" : " background"}
+              </span>
             </Show>
           </text>
         </box>

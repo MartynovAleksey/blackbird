@@ -85,6 +85,11 @@ export function SubagentFooter() {
                 ({subagentInfo().index} of {subagentInfo().total})
               </text>
             </Show>
+            <Show when={(sync.data.session_status[route.sessionID]?.type ?? "idle") === "idle"}>
+              <text fg={theme.textMuted} wrapMode="none">
+                · not running, continue it from the parent session
+              </text>
+            </Show>
             <Show when={usage()}>
               {(item) => (
                 <text fg={theme.textMuted} wrapMode="none">

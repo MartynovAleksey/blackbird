@@ -975,14 +975,18 @@ export function Prompt(props: PromptProps) {
     if (workspace.creating() || move.creating()) return false
     if (auto()?.visible) return false
     if (!store.prompt.input) return false
-    const agent = local.agent.current()
+    // blackbird: corrections sent to a running subagent keep its agent and model instead of the parent's.
+    const subagent = props.sessionID && sync.session.get(props.sessionID)?.parentID ? lastUserMessage() : undefined
+    const agent = subagent ? { name: subagent.agent } : local.agent.current()
     if (!agent) return false
     const trimmed = store.prompt.input.trim()
     if (trimmed === "exit" || trimmed === "quit" || trimmed === ":q") {
       void exit()
       return true
     }
-    const selectedModel = local.model.current()
+    const selectedModel = subagent
+      ? { providerID: subagent.model.providerID, modelID: subagent.model.modelID }
+      : local.model.current()
     if (!selectedModel) {
       void promptModelWarning()
       return false
@@ -1003,7 +1007,7 @@ export function Prompt(props: PromptProps) {
       return false
     }
 
-    const variant = local.model.variant.current()
+    const variant = subagent ? subagent.model.variant : local.model.variant.current()
     let sessionID = props.sessionID
     let finishMoveProgress = false
     if (sessionID == null) {
