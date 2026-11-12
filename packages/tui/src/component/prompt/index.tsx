@@ -1280,6 +1280,8 @@ export function Prompt(props: PromptProps) {
         await data.session.sync(target)
         session = data.session.get(target)
       }
+      // blackbird: corrections to a subagent keep its own agent; the composer's agent belongs to the parent.
+      if (session?.parentID) return
       if (session?.agent !== agent.id) {
         await client.api.session.switchAgent({ sessionID: target, agent: agent.id })
       }
@@ -1294,6 +1296,7 @@ export function Prompt(props: PromptProps) {
     }
     const commitSelection = async () => {
       await prepareAgent()
+      if (session?.parentID) return
       await commitModel()
     }
     if (!trimmed) {
