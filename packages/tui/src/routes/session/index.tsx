@@ -222,6 +222,8 @@ export function Session(props: {
     data.session.pending.list(route.sessionID).flatMap((item) => (item.type === "user" ? [item] : [])),
   )
   const pendingDeliveries = createMemo(() => new Map(pendingUsers().map((item) => [item.id, item.delivery])))
+  // blackbird: a running subagent shows the prompt so the user can steer it; idle ones keep the subagent picker.
+  const subagentRunning = createMemo(() => !!session()?.parentID && data.session.status(route.sessionID) === "running")
   const queuedPrompts = createMemo(() =>
     pendingUsers().flatMap((item) =>
       item.delivery === "queue" ? [{ id: item.id, text: item.payload.text, payload: item.payload }] : [],
@@ -1545,7 +1547,7 @@ export function Session(props: {
                     />
                   )}
                 </For>
-                <BackgroundToolHint messages={messages()} />
+                <BackgroundToolHint messages={messages()} queued={pendingUsers().length > 0} />
                 <Show when={session()?.revert?.messageID}>
                   <RevertMessage
                     count={messagesFromRevert().filter((message) => message.type === "user").length}
@@ -1584,7 +1586,7 @@ export function Session(props: {
               <Slot path="session.composer.top" input={{ sessionID: route.sessionID }} />
               <Composer
                 sessionID={route.sessionID}
-                open={composer.open || (!!session()?.parentID && forms().length === 0)}
+                open={composer.open || (!!session()?.parentID && !subagentRunning() && forms().length === 0)}
                 defaultTab={composer.tab ?? (session()?.parentID ? "subagents" : undefined)}
                 onClose={() => {
                   const parent = session()?.parentID
@@ -1598,7 +1600,7 @@ export function Session(props: {
                 visibleTerminalID={props.visibleTerminalID}
               />
               <Switch>
-                <Match when={composer.open || (!!session()?.parentID && forms().length === 0)}>{null}</Match>
+                <Match when={composer.open || (!!session()?.parentID && !subagentRunning() && forms().length === 0)}>{null}</Match>
                 <Match when={promptedPermissions().length > 0}>
                   <Show when={promptedPermissions()[0]?.id} keyed>
                     {(_) => {
@@ -1881,7 +1883,7 @@ function turnTokenToolSummary(tool: SessionMessageAssistantTool) {
   return [primary === undefined ? "" : String(primary), ...details].filter(Boolean).join("  ")
 }
 
-function BackgroundToolHint(props: { messages: SessionMessageInfo[] }) {
+function BackgroundToolHint(props: { messages: SessionMessageInfo[]; queued: boolean }) {
   const theme = useTheme()
   const shortcut = Keymap.useShortcut("session.background")
   const running = createMemo(() => {
@@ -1907,7 +1909,11 @@ function BackgroundToolHint(props: { messages: SessionMessageInfo[] }) {
       {(value) => (
         <box marginTop={1} paddingLeft={3} flexShrink={0}>
           <text fg={theme.text.muted}>
-            Press <span style={{ fg: theme.text.base }}>{value()}</span> to move running work to the background
+            Press <span style={{ fg: theme.text.base }}>{value()}</span>{" "}
+            {/* blackbird: backgrounding the blocking work is how a queued prompt is sent now */}
+            {props.queued
+              ? "to send queued messages now; running work continues in the background"
+              : "to move running work to the background"}
           </text>
         </box>
       )}
