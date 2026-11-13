@@ -287,7 +287,7 @@ const withSession = <A, E, R>(
     if (autoBackground !== undefined)
       yield* Effect.promise(() =>
         Bun.write(
-          path.join(directory, "opencode.json"),
+          path.join(directory, "blackbird.json"),
           JSON.stringify({ experimental: { shell_timeout_background: autoBackground } }),
         ),
       )

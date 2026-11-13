@@ -1069,7 +1069,7 @@ describe("Config", () => {
             const updated = yield* bus
               .subscribe(Event.Updated)
               .pipe(Stream.take(1), Stream.runCollect, Effect.forkScoped({ startImmediately: true }))
-            yield* Effect.promise(() => fs.writeFile(path.join(project, "opencode.json"), JSON.stringify({ shell })))
+            yield* Effect.promise(() => fs.writeFile(path.join(project, "blackbird.json"), JSON.stringify({ shell })))
             yield* trigger
             yield* Fiber.join(updated)
             return remote(yield* config.entries())
@@ -1627,7 +1627,7 @@ describe("Config", () => {
               Promise.all([
                 fs.writeFile(path.join(tmp.path, "token.txt"), 'file\n"token"\n'),
                 fs.writeFile(
-                  path.join(tmp.path, "opencode.jsonc"),
+                  path.join(tmp.path, "blackbird.jsonc"),
                   `{
                       // Ignored reference: {file:.}
                       "username": "user-{env:OPENCODE_TEST_MISSING}",

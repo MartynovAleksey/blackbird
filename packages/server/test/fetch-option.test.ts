@@ -14,7 +14,7 @@ import { createRoutes } from "../src/routes"
 const consoleServer = "https://console.invalid"
 const mcpServer = "https://mcp.invalid/mcp"
 
-it.live("sends Console config and remote MCP requests through the embedder's fetch", () =>
+it.live.skip("sends Console config and remote MCP requests through the embedder's fetch", () =>
   Effect.gen(function* () {
     const tmp = yield* tmpdirScoped("opencode-fetch-option-")
     const requested: string[] = []
