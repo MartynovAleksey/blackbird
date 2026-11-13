@@ -26,7 +26,8 @@ export function setNativeTranslations(next: DesktopNativeBundle) {
 }
 
 export function nativeT(key: DesktopNativeKey, params?: Record<string, string | number>) {
-  return formatDesktopNativeMessage(bundle.messages[key], params)
+  // blackbird: native menus and dialogs name the app blackbird in every locale
+  return formatDesktopNativeMessage(bundle.messages[key], params).replaceAll("OpenCode", "blackbird")
 }
 
 /** Language tags with their names in the app locale, sorted for a menu. */
