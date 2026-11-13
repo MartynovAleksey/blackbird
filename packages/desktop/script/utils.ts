@@ -101,15 +101,16 @@ export async function downloadCliToResources(version = CLI_VERSION, dest = windo
 export async function copyBuiltCliToResources(root: string, dest = windowsify("resources/opencode-cli")) {
   const cli = getCurrentCli()
   const directory = cli.package.replace("@opencode/", "")
-  await copyCliToResources(join(root, directory), dest)
+  // blackbird: the CLI built from this repository is named blackbird; the published one stays opencode.
+  await copyCliToResources(join(root, directory), dest, "blackbird")
 }
 
 // The package directory is an npm package: its package.json version is the string the executable
 // prints for --version. Writing it next to the executable spares the desktop a ~400 ms spawn of the
 // 200 MB binary on first launch.
-async function copyCliToResources(pkg: string, dest: string) {
+async function copyCliToResources(pkg: string, dest: string, name = "opencode") {
   const cli = getCurrentCli()
-  await copyFile(join(pkg, "bin", cli.os === "win32" ? "opencode.exe" : "opencode"), dest)
+  await copyFile(join(pkg, "bin", cli.os === "win32" ? `${name}.exe` : name), dest)
   await prepareCli(dest)
 
   const manifest = Option.getOrUndefined(
