@@ -37,7 +37,10 @@ function fail(message: string) {
 
 /** The default registration file. */
 export function fallback() {
-  return join(process.env["XDG_STATE_HOME"] ?? join(homedir(), ".local", "state"), "opencode", "service.json")
+  // blackbird: the CLI registers under the blackbird state directory unless --opencode-compatible (Brand.name);
+  // Client may not depend on util, so the check is repeated here.
+  const name = process.env["BLACKBIRD_OPENCODE_COMPATIBLE"] === "1" ? "opencode" : "blackbird"
+  return join(process.env["XDG_STATE_HOME"] ?? join(homedir(), ".local", "state"), name, "service.json")
 }
 
 /** Whether two registrations describe the same service instance. */
