@@ -21,6 +21,7 @@ import {
   type MenubarProvider,
 } from "./menu-machine"
 import { nativeT } from "./translations"
+import { opencodeMenu } from "../blackbird-opencode"
 
 type Deps = {
   /** The window a menu command goes to; the renderer decides what it does there. */
@@ -38,6 +39,8 @@ export type MenubarEntry = {
   readonly label: string
   /** A built-in item's command, action, or role, or another contribution's id. */
   readonly after?: string
+  /** blackbird: a checkbox item when present. */
+  checked?(): boolean
   enabled(): boolean
   run(): void
 }
@@ -72,7 +75,7 @@ export function disposeMenu() {
 function build(deps: Deps, provider: MenubarProvider) {
   if (process.platform !== "darwin") return
 
-  const extra = provider()
+  const extra = [...provider(), ...opencodeMenu(deps.relaunch)]
 
   const template = DESKTOP_MENU.filter((menu) => desktopMenuVisible(menu, "macos")).map((menu) =>
     nativeMenu(
@@ -116,7 +119,13 @@ function nativeMenu(menu: DesktopMenu, extra: readonly MenubarEntry[], deps: Dep
       const entry = item.entry
 
       if ("menu" in entry)
-        return { id: entry.id, label: entry.label, enabled: entry.enabled(), click: () => entry.run() }
+        return {
+          id: entry.id,
+          label: entry.label,
+          enabled: entry.enabled(),
+          ...(entry.checked ? { type: "checkbox" as const, checked: entry.checked() } : {}),
+          click: () => entry.run(),
+        }
 
       return nativeItem(entry, deps)
     }),
