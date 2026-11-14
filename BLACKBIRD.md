@@ -19,7 +19,7 @@
 
 ## Сборка релиза в Docker
 
-Все платформы (darwin, linux, windows × arm64, x64) собираются в контейнере; на хосте нужен только Docker. Образ содержит только инструменты, исходники монтируются только для чтения, архивы и `SHA256SUMS` в формате релизов появляются в `./release`.
+CLI для всех платформ (darwin, linux, windows × arm64, x64) и desktop для linux (AppImage) и windows (установщик NSIS) собираются в контейнере; на хосте нужен только Docker. Образ содержит только инструменты, исходники монтируются только для чтения, файлы и `SHA256SUMS` в формате релизов появляются в `./release`.
 
 ```bash
 docker build --platform linux/arm64 -t blackbird-builder - < script/blackbird-release.Dockerfile
@@ -30,6 +30,8 @@ docker run --rm --platform linux/arm64 -e VERSION=2.2.5.7 -v "$PWD":/src:ro -v "
 - `--platform linux/arm64` — для Apple Silicon (под эмуляцией amd64 сборка идёт очень медленно); на Intel укажите `linux/amd64`. Набор целевых платформ от этого не зависит.
 - Образ пересобирать нужно только при смене версии bun в `packageManager`.
 - Без Docker то же делает `script/blackbird-release.sh <версия>` (нужен bun из `packageManager`).
+- Desktop для macOS electron-builder собирает только на macOS, поэтому в контейнере его нет: запуск `script/blackbird-release.sh <версия>` на Mac собирает всё, включая `blackbird-desktop-v<версия>-darwin-{arm64,x64}.zip`.
+- Desktop не подписан; у `.exe` под Windows нет иконки и описания файла (для них electron-builder нужен wine).
 - Бинарники для macOS подписаны только ad-hoc.
 - За корпоративным прокси, с зеркалом npm или в сети с подменой TLS-сертификатов (`SELF_SIGNED_CERT_IN_CHAIN`) скопируйте `script/blackbird-release.env.example`, раскомментируйте нужное и добавьте к `docker run` флаг `--env-file <файл>` (или передайте те же переменные через `-e`).
 
