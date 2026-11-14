@@ -42,7 +42,7 @@ import {
 import { NewSessionBranch } from "./workspace/selector"
 import { NewSessionBrickBreaker } from "./brick-breaker"
 import { NewSessionPinBoard } from "./pin-board"
-import { NewSessionWordmark } from "./wordmark"
+import { Logo } from "@opencode/ui/logo"
 import {
   createWordmarkState,
   selectBrickBreaker,
@@ -114,13 +114,10 @@ export function NewSessionView(props: {
         />
         <div class="absolute inset-x-0 top-[25.375%] flex justify-center px-6">
           <div class={NEW_SESSION_CONTENT_WIDTH}>
-            <NewSessionWordmark
-              ref={setLogo}
-              state={wordmark}
-              onEvent={dispatchWordmark}
-              play
-              sound={settings.sounds.interfaceEnabled}
-            />
+            {/* blackbird: a static wordmark replaces the animated opencode letters. */}
+            <div ref={setLogo} aria-hidden="true" class="pointer-events-none mx-auto w-1/2 max-w-[360px]">
+              <Logo class="block w-full" />
+            </div>
             <div class="mt-8 flex flex-col gap-3">
               <div data-slot="new-session-composer" class="flex flex-col gap-1">
                 <div class="relative z-10">

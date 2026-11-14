@@ -79,7 +79,7 @@ export type HomeProjectsViewProps = {
   onClearNotifications: (server: ServerConnection.Any, project: LocalProject) => void
   onHideProject: (server: ServerConnection.Any, project: LocalProject) => void
   onOpenSettings: () => void
-  onOpenHelp: () => void
+  onOpenHelp?: () => void
 }
 
 export function HomeProjectsView(props: HomeProjectsViewProps) {
@@ -114,11 +114,7 @@ export function HomeProjectsView(props: HomeProjectsViewProps) {
               </Show>
             </bdi>
             <Show when={props.servers.length > 1 && server()}>
-              {(server) => (
-                <bdi class="truncate text-v2-text-text-muted opacity-70">
-                  {props.serverLabel(server())}
-                </bdi>
-              )}
+              {(server) => <bdi class="truncate text-v2-text-text-muted opacity-70">{props.serverLabel(server())}</bdi>}
             </Show>
           </span>
           <Icon name="chevron-down" size="small" class="shrink-0 text-v2-icon-icon-muted" />
@@ -338,7 +334,7 @@ function HomeProjectsPanel(props: HomeProjectsViewProps) {
 export function HomeUtilityNav(props: {
   class?: string
   onOpenSettings: () => void
-  onOpenHelp: () => void
+  onOpenHelp?: () => void
   language: ReturnType<typeof useLanguage>
 }) {
   return (
@@ -353,14 +349,18 @@ export function HomeUtilityNav(props: {
         <Icon name="settings-gear" size="small" />
         <span class={HOME_PROJECT_NAV_LABEL}>{props.language.t("sidebar.settings")}</span>
       </HomeProjectNavButton>
-      <HomeProjectNavButton
-        type="button"
-        class="text-v2-text-text-faint [&>[data-slot=icon-svg]]:text-v2-icon-icon-muted"
-        onClick={props.onOpenHelp}
-      >
-        <Icon name="help" size="small" />
-        <span class={HOME_PROJECT_NAV_LABEL}>{props.language.t("sidebar.help")}</span>
-      </HomeProjectNavButton>
+      <Show when={props.onOpenHelp}>
+        {(open) => (
+          <HomeProjectNavButton
+            type="button"
+            class="text-v2-text-text-faint [&>[data-slot=icon-svg]]:text-v2-icon-icon-muted"
+            onClick={open()}
+          >
+            <Icon name="help" size="small" />
+            <span class={HOME_PROJECT_NAV_LABEL}>{props.language.t("sidebar.help")}</span>
+          </HomeProjectNavButton>
+        )}
+      </Show>
     </div>
   )
 }
@@ -459,7 +459,9 @@ function HomeServerRow(props: {
             class="flex min-w-0 flex-1 items-center gap-1"
             classList={{ "opacity-60": !healthy() && !incompatible() }}
           >
-            <span class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">{props.serverLabel(props.server)}</span>
+            <span class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+              {props.serverLabel(props.server)}
+            </span>
             <Show when={props.server.label}>
               {(label) => (
                 <span

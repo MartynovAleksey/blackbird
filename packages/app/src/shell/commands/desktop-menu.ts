@@ -1,5 +1,8 @@
 import type { DesktopNativeKey } from "@/runtime/i18n/desktop-native"
 
+// blackbird: the help page every Help button and menu opens; while unset they are hidden.
+export const HELP_URL: string | undefined = undefined
+
 export type DesktopMenuPlatform = "macos" | "windows"
 
 export type DesktopMenuAction =
@@ -275,20 +278,8 @@ export const DESKTOP_MENU: DesktopMenu[] = [
     id: "help",
     labelKey: "desktop.menu.help",
     items: [
-      { type: "item", labelKey: "desktop.menu.documentation", href: "https://opencode.ai/docs" },
-      { type: "item", labelKey: "desktop.menu.supportForum", href: "https://discord.com/invite/opencode" },
+      ...(HELP_URL ? [{ type: "item" as const, labelKey: "desktop.menu.documentation" as const, href: HELP_URL }] : []),
       { type: "item", labelKey: "desktop.menu.exportLogs", command: "logs.export" },
-      { type: "separator" },
-      {
-        type: "item",
-        labelKey: "desktop.menu.shareFeedback",
-        href: "https://github.com/anomalyco/opencode/issues/new?template=feature_request.yml",
-      },
-      {
-        type: "item",
-        labelKey: "desktop.menu.reportBug",
-        href: "https://github.com/anomalyco/opencode/issues/new?template=bug_report.yml",
-      },
     ],
   },
 ]

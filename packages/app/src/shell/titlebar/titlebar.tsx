@@ -1,3 +1,4 @@
+import { HELP_URL } from "@/shell/commands/desktop-menu"
 import { createEffect, createMemo, createSignal, Match, on, onCleanup, Show, Switch, untrack } from "solid-js"
 import { Portal } from "solid-js/web"
 import { useLocation } from "@solidjs/router"
@@ -208,7 +209,8 @@ export function Titlebar(props: { verticalTabs?: { mount?: HTMLElement } }) {
             createEffect(() => {
               if (
                 settings.appearance.tabLayout() === "vertical" &&
-                (settings.general.sidebarOrganize() === "projects" || settings.general.sidebarOrganize() === "customize") &&
+                (settings.general.sidebarOrganize() === "projects" ||
+                  settings.general.sidebarOrganize() === "customize") &&
                 !mobile()
               )
                 return
@@ -706,18 +708,22 @@ export function Titlebar(props: { verticalTabs?: { mount?: HTMLElement } }) {
                                 <Icon name="settings-gear" size="small" />
                                 {language.t("sidebar.settings")}
                               </button>
-                              <button
-                                type="button"
-                                data-action="mobile-tabs-help"
-                                class="flex h-7 shrink-0 items-center gap-2 rounded-[6px] px-2 text-[13px] leading-4 text-v2-text-text-faint hover:bg-v2-background-bg-layer-02 focus-visible:outline-none focus-visible:bg-v2-background-bg-layer-02"
-                                onClick={() => {
-                                  closeMobileTabs()
-                                  platform.openExternal("https://opencode.ai/desktop-feedback")
-                                }}
-                              >
-                                <Icon name="help" size="small" />
-                                {language.t("sidebar.help")}
-                              </button>
+                              <Show when={HELP_URL}>
+                                {(url) => (
+                                  <button
+                                    type="button"
+                                    data-action="mobile-tabs-help"
+                                    class="flex h-7 shrink-0 items-center gap-2 rounded-[6px] px-2 text-[13px] leading-4 text-v2-text-text-faint hover:bg-v2-background-bg-layer-02 focus-visible:outline-none focus-visible:bg-v2-background-bg-layer-02"
+                                    onClick={() => {
+                                      closeMobileTabs()
+                                      platform.openExternal(url())
+                                    }}
+                                  >
+                                    <Icon name="help" size="small" />
+                                    {language.t("sidebar.help")}
+                                  </button>
+                                )}
+                              </Show>
                             </div>
                           </div>
                         </div>

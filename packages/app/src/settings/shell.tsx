@@ -64,8 +64,6 @@ const experimentalTab = [
   { value: "experimental", icon: pageIcons.experimental, label: "settings.tab.experimental" },
 ] as const
 
-const aboutTab = [{ value: "about", icon: pageIcons.about, label: "settings.tab.about" }] as const
-
 const nestedProjectTabs = [
   { value: "general", icon: pageIcons.projects, label: "settings.general.section.general" },
   { value: "workspaces", icon: pageIcons.workspaces, label: "settings.tab.workspaces" },
@@ -229,7 +227,7 @@ function RootSettings() {
         ...(experimentalSettingsAvailable
           ? experimentalTab.map((item) => ({ ...item, label: language.t(item.label) }))
           : []),
-        ...aboutTab.map((item) => ({ ...item, label: language.t(item.label) })),
+        // blackbird: the About page stays hidden until it describes blackbird.
       ],
     },
   ])

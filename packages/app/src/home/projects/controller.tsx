@@ -1,3 +1,4 @@
+import { HELP_URL } from "@/shell/commands/desktop-menu"
 import { useDirectoryPicker } from "@/workspaces/selection/picker"
 import { useServerActionsController } from "@/servers/registry/controller"
 import { useSettingsCommand } from "@/settings/command"
@@ -101,9 +102,13 @@ export function createHomeProjectsController(home: HomeController) {
     },
     utility: {
       settings: openSettings,
-      help: () => platform.openExternal("https://opencode.ai/desktop-feedback"),
+      help: HELP_URL ? openHelp(platform, HELP_URL) : undefined,
     },
   }
 }
 
 export type HomeProjectsController = ReturnType<typeof createHomeProjectsController>
+
+function openHelp(platform: ReturnType<typeof usePlatform>, url: string) {
+  return () => platform.openExternal(url)
+}
