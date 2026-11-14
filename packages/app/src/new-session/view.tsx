@@ -114,8 +114,8 @@ export function NewSessionView(props: {
         />
         <div class="absolute inset-x-0 top-[25.375%] flex justify-center px-6">
           <div class={NEW_SESSION_CONTENT_WIDTH}>
-            {/* blackbird: a static wordmark replaces the animated opencode letters. */}
-            <div ref={setLogo} aria-hidden="true" class="pointer-events-none mx-auto w-1/2 max-w-[360px]">
+            {/* blackbird: the static pixel wordmark replaces the animated opencode letters. */}
+            <div ref={setLogo} aria-hidden="true" class="pointer-events-none mx-auto w-3/5 max-w-[440px]">
               <Logo class="block w-full" />
             </div>
             <div class="mt-8 flex flex-col gap-3">
