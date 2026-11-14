@@ -136,5 +136,6 @@ async function prepareCli(dest: string) {
 export function windowsify(path: string) {
   if (path.endsWith(".exe")) return path
 
-  return `${path}${process.platform === "win32" ? ".exe" : ""}`
+  // The target's OS, not the host's: a Windows package can be built on macOS or Linux.
+  return `${path}${getCurrentCli().os === "win32" ? ".exe" : ""}`
 }
