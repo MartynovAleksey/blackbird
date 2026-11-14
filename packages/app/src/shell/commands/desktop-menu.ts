@@ -22,6 +22,9 @@ export type DesktopMenuAction =
   | "window.close"
   | "window.minimize"
   | "window.toggleMaximize"
+  // blackbird: run from the settings page as well as the app menu.
+  | "blackbird.opencodeImport"
+  | "blackbird.opencodeCompatible"
 
 export type DesktopMenuRole =
   | "about"

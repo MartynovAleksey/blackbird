@@ -78,6 +78,7 @@ export type ElectronAPI = {
   setForceFocus(enabled: boolean): Promise<void>
   getSpellcheckEnabled(): Promise<boolean>
   setSpellcheckEnabled(enabled: boolean): Promise<void>
+  getOpencodeCompatible(): Promise<boolean>
   recordFatalRendererError(error: FatalRendererError): Promise<void>
   setNativeTranslations(bundle: DesktopNativeBundle): Promise<void>
 }

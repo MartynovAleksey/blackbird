@@ -32,7 +32,7 @@ export function opencodeMenu(relaunch: () => void): MenubarEntry[] {
   ]
 }
 
-async function importOpencode(relaunch: () => void) {
+export async function importOpencode(relaunch: () => void) {
   if (!(await confirm(nativeT("desktop.opencodeImport.confirm"), nativeT("desktop.opencodeImport.run")))) return
   // The service holds blackbird.db open; the import replaces it, so the service stops first.
   await stopService()
@@ -55,7 +55,7 @@ async function importOpencode(relaunch: () => void) {
   relaunch()
 }
 
-async function toggleCompatible(relaunch: () => void) {
+export async function toggleCompatible(relaunch: () => void) {
   const next = !opencodeCompatible()
   const message = nativeT(next ? "desktop.opencodeCompatible.confirmOn" : "desktop.opencodeCompatible.confirmOff")
   if (!(await confirm(message, nativeT("desktop.opencodeCompatible.restart")))) return

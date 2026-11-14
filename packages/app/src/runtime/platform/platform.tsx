@@ -114,6 +114,9 @@ type PlatformBase = {
   /** Turn the native spellchecker on or off (desktop only) */
   setSpellcheckEnabled?(enabled: boolean): Promise<void>
 
+  /** Get whether blackbird runs on opencode's settings, sessions and service (desktop only) */
+  getOpencodeCompatible?(): Promise<boolean>
+
   /** Run a desktop-only menu action from the app chrome */
   runDesktopMenuAction?(action: DesktopMenuAction): Promise<void> | void
 

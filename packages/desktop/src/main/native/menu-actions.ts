@@ -1,5 +1,6 @@
 import { BrowserWindow } from "electron"
 import { nextDesktopZoomLevel, type DesktopMenuAction } from "@opencode/app/desktop-menu"
+import { importOpencode, toggleCompatible } from "../blackbird-opencode"
 import { setZoomLevel } from "../windows"
 
 export type DesktopMenuActionHandlers = Partial<{
@@ -94,6 +95,14 @@ export function runDesktopMenuAction(
       return
     case "edit.selectAll":
       win?.webContents.selectAll()
+
+      return
+    case "blackbird.opencodeImport":
+      if (handlers.relaunch) void importOpencode(handlers.relaunch)
+
+      return
+    case "blackbird.opencodeCompatible":
+      if (handlers.relaunch) void toggleCompatible(handlers.relaunch)
 
       return
   }

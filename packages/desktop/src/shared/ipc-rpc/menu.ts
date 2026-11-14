@@ -21,6 +21,8 @@ const DesktopMenuAction = Schema.Literals([
   "window.close",
   "window.minimize",
   "window.toggleMaximize",
+  "blackbird.opencodeImport",
+  "blackbird.opencodeCompatible",
 ])
 
 export const MenuRunAction = Rpc.make("MenuRunAction", {

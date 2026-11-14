@@ -69,6 +69,8 @@ export const AppSetNativeTranslations = Rpc.make("AppSetNativeTranslations", {
 
 export const AppRelaunch = Rpc.make("AppRelaunch")
 
+export const AppGetOpencodeCompatible = Rpc.make("AppGetOpencodeCompatible", { success: Schema.Boolean })
+
 export const AppRpcs = RpcGroup.make(
   AppAwaitInitialization,
   AppReconnectService,
@@ -86,4 +88,5 @@ export const AppRpcs = RpcGroup.make(
   AppRecordFatalRendererError,
   AppSetNativeTranslations,
   AppRelaunch,
+  AppGetOpencodeCompatible,
 )

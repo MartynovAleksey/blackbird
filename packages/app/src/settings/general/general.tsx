@@ -1,4 +1,5 @@
-import { Component, Show, createMemo } from "solid-js"
+import { Component, Show, createMemo, createResource } from "solid-js"
+import { Button } from "@opencode/ui/button"
 import { createMediaQuery } from "@solid-primitives/media"
 import { Select } from "@opencode/ui/select"
 import { Switch } from "@opencode/ui/switch"
@@ -247,6 +248,9 @@ export const SettingsGeneral: Component = () => {
     write: (checked) => platform.setSpellcheckEnabled?.(checked),
   })
 
+  // blackbird: both run the app-menu actions, which confirm and relaunch in the main process.
+  const [opencodeCompatible] = createResource(() => platform.getOpencodeCompatible?.() ?? false)
+
   const GeneralSection = () => (
     <div class="settings-section">
       <h3 class="settings-section-title">{language.t("settings.general.section.general")}</h3>
@@ -287,6 +291,25 @@ export const SettingsGeneral: Component = () => {
             <div data-action="settings-spellcheck">
               <Switch checked={spellcheck.value()} onChange={spellcheck.select} />
             </div>
+          </SettingsRow>
+          <SettingsRow
+            title={language.t("settings.general.row.opencodeCompatible.title")}
+            description={language.t("settings.general.row.opencodeCompatible.description")}
+          >
+            <div data-action="settings-opencode-compatible">
+              <Switch
+                checked={opencodeCompatible() ?? false}
+                onChange={() => platform.runDesktopMenuAction?.("blackbird.opencodeCompatible")}
+              />
+            </div>
+          </SettingsRow>
+          <SettingsRow
+            title={language.t("settings.general.row.opencodeImport.title")}
+            description={language.t("settings.general.row.opencodeImport.description")}
+          >
+            <Button variant="neutral" onClick={() => platform.runDesktopMenuAction?.("blackbird.opencodeImport")}>
+              {language.t("desktop.opencodeImport.run")}
+            </Button>
           </SettingsRow>
         </Show>
 

@@ -1143,6 +1143,12 @@ export const dict = {
     "Choose whether to queue follow-ups or steer the current turn. Use {{keybind}} to switch.",
   "settings.general.row.followUpBehavior.queue": "Queue",
   "settings.general.row.followUpBehavior.steer": "Steer",
+  "settings.general.row.opencodeCompatible.title": "opencode compatibility mode",
+  "settings.general.row.opencodeCompatible.description":
+    "Use opencode's settings, sessions, keys and background service. The app restarts",
+  "settings.general.row.opencodeImport.title": "Import from opencode",
+  "settings.general.row.opencodeImport.description":
+    "Copy opencode's settings, sessions and keys into blackbird. Existing files are kept as .bak; the app restarts",
   "settings.general.row.pinchZoom.title": "Pinch to zoom",
   "settings.general.row.pinchZoom.description": "Allow trackpad pinch and Ctrl-scroll gestures to zoom",
   "settings.general.row.spellcheck.title": "Spellcheck",

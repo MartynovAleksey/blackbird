@@ -178,7 +178,6 @@ export const dict = {
   "provider.connect.toast.connected.title": "{{provider}} подключён",
   "provider.connect.toast.connected.description": "Модели {{provider}} теперь доступны.",
 
-
   "provider.disconnect.toast.disconnected.title": "{{provider}} отключён",
   "provider.disconnect.toast.disconnected.description": "Модели {{provider}} больше недоступны.",
   "model.tag.free": "Бесплатно",
@@ -238,7 +237,6 @@ export const dict = {
 
   "dialog.mcp.title": "MCP",
   "dialog.mcp.empty": "MCP не настроены",
-
 
   "dialog.fork.empty": "Нет сообщений для ответвления",
 
@@ -432,6 +430,12 @@ export const dict = {
   "settings.general.row.showCustomAgents.description":
     "Показывать переключатель агентов в редакторе запросов. Если он скрыт, по умолчанию используется агент Build.",
 
+  "settings.general.row.opencodeCompatible.title": "Режим совместимости с opencode",
+  "settings.general.row.opencodeCompatible.description":
+    "Использовать настройки, сессии, ключи и фоновый сервис opencode. Приложение перезапустится",
+  "settings.general.row.opencodeImport.title": "Импорт из opencode",
+  "settings.general.row.opencodeImport.description":
+    "Скопировать настройки, сессии и ключи opencode в blackbird. Текущие файлы сохранятся как .bak, приложение перезапустится",
   "settings.general.row.pinchZoom.title": "Масштабирование сведением пальцев",
   "settings.general.row.pinchZoom.description":
     "Разрешить масштабирование сведением пальцев на трекпаде и прокруткой с нажатой клавишей Ctrl",
@@ -675,12 +679,14 @@ export const dict = {
   "desktop.menu.installCli": "Установить CLI...",
   "desktop.menu.opencodeImport": "Импортировать из opencode…",
   "desktop.menu.opencodeCompatible": "Режим совместимости с opencode",
-  "desktop.opencodeImport.confirm": "Импортировать настройки, сессии и ключи opencode в blackbird? Текущие файлы blackbird сохранятся как .bak. После импорта приложение перезапустится.",
+  "desktop.opencodeImport.confirm":
+    "Импортировать настройки, сессии и ключи opencode в blackbird? Текущие файлы blackbird сохранятся как .bak. После импорта приложение перезапустится.",
   "desktop.opencodeImport.run": "Импортировать",
   "desktop.opencodeImport.cancel": "Отмена",
   "desktop.opencodeImport.done": "Импорт из opencode завершён",
   "desktop.opencodeImport.failed": "Не удалось импортировать из opencode",
-  "desktop.opencodeCompatible.confirmOn": "Перезапустить в режиме совместимости с opencode? blackbird будет использовать настройки, сессии, ключи и фоновый сервис opencode.",
+  "desktop.opencodeCompatible.confirmOn":
+    "Перезапустить в режиме совместимости с opencode? blackbird будет использовать настройки, сессии, ключи и фоновый сервис opencode.",
   "desktop.opencodeCompatible.confirmOff": "Перезапустить с собственными настройками и сессиями blackbird?",
   "desktop.opencodeCompatible.restart": "Перезапустить",
   "desktop.cli.installed.title": "CLI установлен",

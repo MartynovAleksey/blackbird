@@ -6,6 +6,7 @@ import { checkAppExists, resolveAppPath } from "../files/apps"
 import { setForceFocus } from "../native/debug"
 import { DesktopLogging, scoped } from "../native/logging"
 import { getSpellcheckEnabled, setSpellcheckEnabled } from "../native/spellcheck"
+import { opencodeCompatible } from "../blackbird-settings"
 import { setNativeTranslations } from "../native/translations"
 import { IpcPortHandoff } from "../ipc-transport"
 import { ApplicationLifecycle } from "../lifecycle"
@@ -65,6 +66,7 @@ export const appHandlers = AppRpcs.toLayer(
           setNativeTranslations(bundle)
         }),
       AppRelaunch: () => Effect.sync(lifecycle.relaunch),
+      AppGetOpencodeCompatible: () => Effect.sync(opencodeCompatible),
     })
   }),
 )
