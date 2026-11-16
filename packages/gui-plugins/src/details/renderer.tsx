@@ -1,5 +1,5 @@
 import { lazy, onCleanup, Show, Suspense } from "solid-js"
-import { Panel, Slot, Style, usePanel, type Plugin } from "@opencode/plugin/gui"
+import { MenuItem, Panel, Slot, Style, usePanel, type MenuItem as MenuItemValue, type PanelTab, type Plugin } from "@opencode/plugin/gui"
 import type Details from "./index"
 import { DetailsHeader, type DetailsMenus } from "./popover"
 import { BuiltinSlot, onIdle } from "@opencode/plugin/gui/builtin"
@@ -61,6 +61,14 @@ const setup: Plugin.Setup<typeof Details> = (ctx) => {
     ),
   })
 
+  // blackbird: the details also open as a side tab, the Session tab of the Native layout's tool rail.
+  const tab: PanelTab = {
+    id: "main",
+    get title() {
+      return ctx.t("title")
+    },
+  }
+
   // The narrow-screen details drawer, offered for sessions of a project, subagents included.
   const panel: Panel = {
     id: "main",
@@ -73,19 +81,41 @@ const setup: Plugin.Setup<typeof Details> = (ctx) => {
       kind: "drawer",
       icon: "info",
     },
-    list: () => [],
+    list: (input) => (input.open.includes("main") ? [tab] : []),
     render: (props) => {
       const frame = usePanel()
 
       return (
         <Show when={props.session.project}>
           <Suspense>
-            <DetailsPanel mobile shown={frame.visible()} session={props.session} mcp={mcp} />
+            <DetailsPanel
+              mobile={frame.placement() === "mobile"}
+              fill={frame.placement() !== "mobile"}
+              shown={frame.visible()}
+              session={props.session}
+              mcp={mcp}
+            />
           </Suspense>
         </Show>
       )
     },
   }
+
+  ctx.add(MenuItem, (): MenuItemValue | undefined => {
+    const session = sessions.current()
+
+    if (!session?.project || ctx.layout.narrow()) return
+
+    return {
+      menu: "session.panel",
+      id: "main",
+      title: ctx.t("title"),
+      icon: "bullet-list",
+      order: 5,
+      opened: ctx.layout.state(`${ctx.id}:main`, session) !== "closed",
+      run: () => ctx.layout.open(`${ctx.id}:main`, session),
+    }
+  })
 
   ctx.add(Panel, () => {
     const session = sessions.current()

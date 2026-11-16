@@ -11,6 +11,7 @@ import { Button } from "@opencode/ui/button"
 import { Icon } from "@opencode/ui/icon"
 import { IconButton } from "@opencode/ui/icon-button"
 import { Menu } from "@opencode/ui/menu"
+import { Tooltip } from "@opencode/ui/tooltip"
 import { ScrollView } from "@opencode/ui/scroll-view"
 import { displayName } from "@opencode/ui/project-avatar"
 import { homeSessionsQuery } from "@/home/sessions/queries"
@@ -28,6 +29,10 @@ import { ProjectIcon } from "@/shell/layout/project-icon"
 import { useLayout } from "@/shell/state/layout"
 import { createProjectSessionActions } from "@/shell/tabs/project-sessions"
 import { useTabs, type Tab } from "@/shell/tabs/tabs"
+import { useSettings } from "@/settings/model"
+import { addProjects } from "@/home/projects/add"
+import { homeProjectDirectories } from "@/shell/layout/helpers"
+import { useDirectoryPicker } from "@/workspaces/selection/picker"
 import { pathKey } from "@/workspaces/path-key"
 import "./tab-nav.css"
 import { ProjectSessionRow } from "./project-session-row"
@@ -77,8 +82,33 @@ export function SidebarOrganized(props: {
   const language = useLanguage()
 
   const tabs = useTabs()
+  const servers = useServers()
+  const layout = useLayout()
+  const global = useGlobal()
+  const pickDirectory = useDirectoryPicker()
+  const settings = useSettings()
+  // blackbird: Native lists sessions only inside their projects, which start expanded, as in Claude Code.
+  const native = () => settings.appearance.tabLayout() === "native"
 
   createSidebarActivityListener()
+
+  // blackbird: adds projects on the server the sidebar lists, like Home's Add project.
+  const addProject = () => {
+    const conn =
+      servers.visible.find(
+        (item) => ServerConnection.key(item) === (props.currentTab?.server ?? layout.home.selection().server),
+      ) ?? servers.visible[0]
+    const ctx = conn && global.serverCtx(ServerConnection.key(conn))
+
+    if (!conn || !ctx) return
+
+    pickDirectory({
+      server: conn,
+      title: language.t("command.project.open"),
+      multiple: true,
+      onSelect: (result) => void addProjects(ctx, homeProjectDirectories(result)),
+    })
+  }
 
   const [local, setLocal] = createStore<{
     projectSession: { server: ServerConnection.Key; sessionId: string } | undefined
@@ -122,36 +152,50 @@ export function SidebarOrganized(props: {
       <ScrollView class="min-h-0 flex-1" thumbContainer={local.thumbTrack} thumbHoverTarget={local.hoverTarget}>
         <div class="flex flex-col gap-3">
           <section class="flex shrink-0 flex-col gap-2">
-            <button
-              type="button"
-              class="flex h-6 w-full shrink-0 items-center gap-1.5 rounded-[6px] px-2 text-start text-[13px] leading-4 font-medium text-v2-text-text-muted hover:text-v2-text-text-base focus-visible:outline-none focus-visible:bg-v2-overlay-simple-overlay-hover"
-              aria-expanded={!state.projectsCollapsed}
-              onClick={() => setState("projectsCollapsed", (value) => !value)}
-            >
-              <span class="min-w-0 truncate">{language.t("sidebar.organize.projects")}</span>
-              <Icon
-                name="fill-triangle-down"
-                size="small"
-                class="shrink-0 text-v2-icon-icon-muted transition-transform"
-                classList={{ "-rotate-90 rtl:rotate-90": state.projectsCollapsed }}
-              />
-            </button>
+            <div class="flex shrink-0 items-center gap-1">
+              <button
+                type="button"
+                class="flex h-6 min-w-0 flex-1 items-center gap-1.5 rounded-[6px] px-2 text-start text-[13px] leading-4 font-medium text-v2-text-text-muted hover:text-v2-text-text-base focus-visible:outline-none focus-visible:bg-v2-overlay-simple-overlay-hover"
+                aria-expanded={!state.projectsCollapsed}
+                onClick={() => setState("projectsCollapsed", (value) => !value)}
+              >
+                <span class="min-w-0 truncate">{language.t("sidebar.organize.projects")}</span>
+                <Icon
+                  name="fill-triangle-down"
+                  size="small"
+                  class="shrink-0 text-v2-icon-icon-muted transition-transform"
+                  classList={{ "-rotate-90 rtl:rotate-90": state.projectsCollapsed }}
+                />
+              </button>
+              <Tooltip placement="right" value={language.t("home.project.add")}>
+                <IconButton
+                  type="button"
+                  data-action="sidebar-project-add"
+                  variant="ghost-muted"
+                  size="small"
+                  icon={<Icon name="plus" />}
+                  aria-label={language.t("home.project.add")}
+                  onClick={addProject}
+                />
+              </Tooltip>
+            </div>
             <Show when={!state.projectsCollapsed}>
               <div class="flex min-w-0 flex-col gap-1">
                 <ProjectList
                   currentTab={props.currentTab}
                   isOpenTab={isOpenTab}
-                  highlightActive={projectSelected()}
+                  highlightActive={native() || projectSelected()}
                   onSelect={(session) => setLocal("projectSession", session)}
                   state={state}
                   ready={ready()}
-                  onExpand={(key) => setState("expanded", key, (value) => !value)}
+                  expandedByDefault={native()}
+                  onExpand={(key) => setState("expanded", key, !(state.expanded[key] ?? native()))}
                   onReorder={(server, ids) => setState("order", server, ids)}
                 />
               </div>
             </Show>
           </section>
-          <div class="flex shrink-0 flex-col gap-3" classList={{ hidden: tabs.store.length === 0 }}>
+          <div class="flex shrink-0 flex-col gap-3" classList={{ hidden: tabs.store.length === 0 || native() }}>
             <Show when={!state.projectsCollapsed}>
               <div role="separator" class="mx-2 h-px shrink-0 bg-v2-border-border-muted" />
             </Show>
@@ -171,6 +215,7 @@ function ProjectList(props: {
   onSelect: (session: { server: ServerConnection.Key; sessionId: string }) => void
   state: typeof SidebarState.Type
   ready: boolean
+  expandedByDefault: boolean
   onExpand: (key: string) => void
   onReorder: (server: string, ids: string[]) => void
 }) {
@@ -292,15 +337,17 @@ function ProjectList(props: {
 
                 const limit = () => local.sessionLimits[key()] ?? 5
 
+                const expanded = () => props.state.expanded[key()] ?? props.expandedByDefault
+
                 return (
                   <ProjectRow
                     project={project()}
                     server={conn()}
                     actions={projectActions}
                     index={index()}
-                    expanded={!!props.state.expanded[key()]}
+                    expanded={expanded()}
                     onToggle={() => {
-                      if (props.state.expanded[key()]) setLocal("sessionLimits", key(), 5)
+                      if (expanded()) setLocal("sessionLimits", key(), 5)
                       props.onExpand(key())
                     }}
                   >

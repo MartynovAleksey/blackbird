@@ -14,6 +14,7 @@ import {
   type Accessor,
 } from "solid-js"
 import { createStore } from "solid-js/store"
+import { createResizeObserver } from "@solid-primitives/resize-observer"
 import { ResizeHandle } from "@opencode/ui/resize-handle"
 import type { BackgroundTask, MountedSession, SessionScreen } from "@opencode/plugin/gui"
 import { MessageTimeline } from "@/session/timeline/message-timeline"
@@ -49,6 +50,7 @@ import { usePlatform } from "@/runtime/platform/platform"
 import { useServer } from "@/runtime/server/current"
 import { reviewGlyphFill, SessionReviewToggle } from "./header/session-header-actions"
 import { createTimelineCache } from "./timeline/cache"
+import { NativeRail } from "./native-rail"
 import { createPanelMotion, holdLandingWidth, panelOpacity, setPanelResizing } from "@/shell/panel-motion"
 
 export function SessionScreenView(props: { session: SessionModel }) {
@@ -80,6 +82,7 @@ function SessionScreenContent(props: {
   const language = useLanguage()
   const attachment = usePluginAttachment()
   const settings = useSettings()
+  const native = () => settings.appearance.tabLayout() === "native"
   const server = useServer()
   const isDesktop = session.isDesktop
   const bottomMobileTabs = () => settings.general.mobileTitlebarPosition() === "bottom"
@@ -143,9 +146,17 @@ function SessionScreenContent(props: {
   const [store, setStore] = createStore<{
     timelineScrollbarHidden: boolean
     mobileCached: string[]
+    nativeRailWidth: number
   }>({
     timelineScrollbarHidden: false,
     mobileCached: [],
+    nativeRailWidth: 0,
+  })
+
+  // blackbird: the Native tool row sits over the end of whichever pane is rightmost; that pane's header makes room.
+  // Always an object: an undefined style would drop the widths panel motion writes to these elements.
+  const railInset = (rightmost: boolean) => ({
+    "--session-header-inset-end": native() && rightmost ? `${store.nativeRailWidth + 16}px` : undefined,
   })
 
   const sideVisible = createMemo(() => isDesktop() && screen.side.open())
@@ -449,9 +460,13 @@ function SessionScreenContent(props: {
   return (
     <>
       <div class="flex-1 min-h-0 flex flex-col gap-2 px-[var(--shell-inline-inset,8px)] pb-[var(--shell-bottom-inset,8px)] pt-[var(--shell-top-inset,8px)]">
-        <div ref={screen.panel.ref} data-pane-row class="relative flex-1 min-h-0 flex flex-col md:flex-row gap-2">
+        <div
+          ref={screen.panel.ref}
+          data-pane-row
+          class="relative flex-1 min-h-0 flex flex-col md:flex-row gap-2"
+        >
           {/* Keep the control outside panel animations. */}
-          <Show when={isDesktop() && messagesReady() && session.identity.params.id}>
+          <Show when={isDesktop() && messagesReady() && session.identity.params.id && !native()}>
             <div
               class="absolute end-[var(--session-header-inset-end,12px)] top-0 z-30 h-12 flex items-center"
               data-slot="session-review-toggle"
@@ -470,6 +485,7 @@ function SessionScreenContent(props: {
           <div
             ref={chat}
             class="relative z-10 min-w-0 shrink-0 flex flex-col min-h-0 h-full flex-1 md:flex-none"
+            style={railInset(!sideMotion.present())}
             data-slot="session-chat-panel"
             data-scrollbar-hidden={store.timelineScrollbarHidden}
             onPointerMove={revealTimelineScrollbar}
@@ -508,6 +524,7 @@ function SessionScreenContent(props: {
             <div
               ref={sidePresence}
               data-slot="session-side-panel-presence"
+              style={railInset(sideMotion.present())}
               class={`z-0 min-w-0 h-full overflow-visible ${
                 !sideMotion.present()
                   ? // Out of the row, so a closed panel takes no space or gap.
@@ -535,6 +552,15 @@ function SessionScreenContent(props: {
                   </div>
                 </div>
               </div>
+            </div>
+          </Show>
+          <Show when={isDesktop() && native() && session.identity.params.id}>
+            <div class="absolute end-[var(--session-header-inset-end,12px)] top-0 z-30">
+              <NativeRail
+                bottomTabs={bottomTabs}
+                bottomShown={bottomOpen}
+                ref={(element) => createResizeObserver(element, ({ width }) => setStore("nativeRailWidth", width))}
+              />
             </div>
           </Show>
         </div>

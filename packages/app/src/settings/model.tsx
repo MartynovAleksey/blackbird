@@ -151,7 +151,8 @@ const appearanceSchema = Persistence.struct({
   sans: Schema.String,
   terminal: Schema.String,
   // "inbox" is experimental: the vertical layout with a server-wide session inbox in place of tabs.
-  tabLayout: Schema.Literals(["horizontal", "vertical", "inbox"]),
+  // blackbird: "native" is the vertical layout arranged like Claude Code (projects, settings, tool rail).
+  tabLayout: Schema.Literals(["horizontal", "vertical", "inbox", "native"]),
   sidebarOpen: Persistence.optional(Schema.Boolean),
   reduceMotion: Schema.Literals(["system", "on", "off"]),
 })
@@ -449,6 +450,8 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
         },
         sidebarOrganizeOptions,
         sidebarOrganize: createMemo(() => {
+          // blackbird: Native always groups by project; the saved choice comes back with the side tabs layout.
+          if (store.appearance?.tabLayout === "native") return "projects"
           const value = store.general?.sidebarOrganize
 
           return sidebarOrganizeOptions.includes(value) ? value : defaultSettings.general.sidebarOrganize

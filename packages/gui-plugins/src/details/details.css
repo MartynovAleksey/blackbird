@@ -17,6 +17,13 @@
     width: 100%;
     max-width: none;
   }
+
+  &[data-fill] {
+    width: 100%;
+    max-width: none;
+    padding: 12px;
+    box-sizing: border-box;
+  }
 }
 
 .session-summary-card {

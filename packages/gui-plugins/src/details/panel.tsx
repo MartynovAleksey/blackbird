@@ -5,6 +5,8 @@ export type DetailsPanelProps = {
   session: MountedSession
   shown?: boolean
   mobile?: boolean
+  /** blackbird: fills a side tab instead of sizing itself as a popover. */
+  fill?: boolean
   /** The plugin instance's MCP controllers, which outlive each panel. */
   mcp: McpControllers
   /** Closes the popover that shows the panel, once an action opened something beside it. */
@@ -13,7 +15,11 @@ export type DetailsPanelProps = {
 
 export default function SessionDetailsPanel(props: DetailsPanelProps) {
   return (
-    <div data-component="session-summary-panel" data-mobile={props.mobile || undefined}>
+    <div
+      data-component="session-summary-panel"
+      data-mobile={props.mobile || undefined}
+      data-fill={props.fill || undefined}
+    >
       <SessionServerPanel
         session={props.session}
         directory={props.session.directory}

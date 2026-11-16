@@ -1,5 +1,7 @@
 [data-component="interface-mode"] {
   display: flex;
+  /* blackbird: four layouts no longer fit a narrow settings row on one line. */
+  flex-wrap: wrap;
   gap: 12px;
   min-width: 0;
   margin: 0;
@@ -143,6 +145,32 @@
 
     &[data-status="working"] {
       background-color: var(--v2-state-fg-info);
+    }
+  }
+
+  /* Native: settings pinned under the session list, and the tool rail at the far edge. */
+  [data-slot="preview-settings"] {
+    height: 5px;
+    margin-top: auto;
+    border-radius: 2px;
+    background-color: var(--preview-ink);
+  }
+
+  [data-slot="preview-tools"] {
+    display: flex;
+    width: 10px;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 0;
+    border-inline-start: 0.5px solid var(--v2-border-border-base);
+    background-color: var(--v2-overlay-simple-overlay-pressed);
+
+    i {
+      width: 4px;
+      height: 4px;
+      border-radius: 1px;
+      background-color: color-mix(in srgb, var(--preview-ink-strong) 45%, transparent);
     }
   }
 

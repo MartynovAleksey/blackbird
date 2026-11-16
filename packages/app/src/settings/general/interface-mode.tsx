@@ -1,4 +1,4 @@
-import { For, Match, Switch, createUniqueId } from "solid-js"
+import { For, Match, Show, Switch, createUniqueId } from "solid-js"
 import { useLanguage } from "@/runtime/i18n/language"
 import { type TabLayout, useSettings } from "@/settings/model"
 import { SettingsRow } from "@/settings/row"
@@ -8,6 +8,7 @@ const modes = [
   { id: "top", layout: "horizontal" },
   { id: "side", layout: "vertical" },
   { id: "inbox", layout: "inbox" },
+  { id: "native", layout: "native" },
 ] as const satisfies { id: string; layout: TabLayout }[]
 
 export function InterfaceModeSetting() {
@@ -52,6 +53,14 @@ export function InterfaceModeSetting() {
                       </For>
                     </span>
                   </Match>
+                  <Match when={mode.id === "native"}>
+                    <span data-slot="preview-rail">
+                      <For each={[0, 1, 2, 3]}>
+                        {(index) => <span data-slot="preview-tab" data-active={index === 1 ? "" : undefined} />}
+                      </For>
+                      <span data-slot="preview-settings" />
+                    </span>
+                  </Match>
                   <Match when={mode.id === "inbox"}>
                     <span data-slot="preview-rail">
                       <For each={inboxRows}>
@@ -69,6 +78,11 @@ export function InterfaceModeSetting() {
                   <span data-slot="preview-line" />
                   <span data-slot="preview-composer" />
                 </span>
+                <Show when={mode.id === "native"}>
+                  <span data-slot="preview-tools">
+                    <For each={[0, 1, 2, 3]}>{() => <i />}</For>
+                  </span>
+                </Show>
               </span>
               <span data-slot="interface-mode-name">{language.t(`settings.general.row.interfaceMode.${mode.id}`)}</span>
             </label>

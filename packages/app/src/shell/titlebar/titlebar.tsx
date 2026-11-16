@@ -208,7 +208,7 @@ export function Titlebar(props: { verticalTabs?: { mount?: HTMLElement } }) {
 
             createEffect(() => {
               if (
-                settings.appearance.tabLayout() === "vertical" &&
+                (settings.appearance.tabLayout() === "vertical" || settings.appearance.tabLayout() === "native") &&
                 (settings.general.sidebarOrganize() === "projects" ||
                   settings.general.sidebarOrganize() === "customize") &&
                 !mobile()
@@ -831,9 +831,24 @@ export function Titlebar(props: { verticalTabs?: { mount?: HTMLElement } }) {
                                 </Match>
                               </Switch>
                             </div>
-                            <Show when={titlebarItems.ids().length > 0}>
+                            <Show
+                              when={titlebarItems.ids().length > 0 || settings.appearance.tabLayout() === "native"}
+                            >
                               <div data-slot="vertical-tabs-footer" class="mt-2 flex w-full shrink-0 flex-col">
                                 <TitlebarItems items={titlebarItems} vertical />
+                                {/* blackbird: Native pins settings under the session list, as Claude Code does. */}
+                                <Show when={settings.appearance.tabLayout() === "native"}>
+                                  <button
+                                    type="button"
+                                    data-titlebar-tab-action
+                                    data-action="vertical-tabs-settings"
+                                    class="flex h-7 w-full shrink-0 items-center gap-2 rounded-[6px] px-2 text-[13px] leading-4 text-v2-text-text-faint hover:text-v2-text-text-base"
+                                    onClick={() => openSettings()}
+                                  >
+                                    <Icon name="settings-gear" class="shrink-0" />
+                                    <span class="min-w-0 truncate">{language.t("sidebar.settings")}</span>
+                                  </button>
+                                </Show>
                               </div>
                             </Show>
                           </Portal>

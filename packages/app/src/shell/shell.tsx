@@ -61,7 +61,8 @@ export default function Layout(props: ParentProps) {
   const verticalTabs = () => preferences.appearance.tabLayout() !== "horizontal" && !mobile()
 
   const organizedSidebar = () =>
-    preferences.appearance.tabLayout() === "vertical" && preferences.general.sidebarOrganize() !== "list"
+    (preferences.appearance.tabLayout() === "vertical" || preferences.appearance.tabLayout() === "native") &&
+    preferences.general.sidebarOrganize() !== "list"
 
   const toggleSidebar = () => preferences.appearance.setSidebarOpen(!preferences.appearance.sidebarOpen())
 

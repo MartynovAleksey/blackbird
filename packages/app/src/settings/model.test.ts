@@ -206,6 +206,11 @@ describe("settings schema", () => {
     },
   )
 
+  test("keeps the native layout and defaults an unknown one", () => {
+    expect(decode({ appearance: { tabLayout: "native" } }).appearance.tabLayout).toBe("native")
+    expect(decode({ appearance: { tabLayout: "unknown" } }).appearance.tabLayout).toBe("horizontal")
+  })
+
   test("does not silently repair invalid values during encoding", () => {
     expect(() =>
       Schema.encodeUnknownSync(settingsSchema)({ ...decode({}), appearance: { fontSize: "large" } }),
