@@ -1,0 +1,125 @@
+/* blackbird: the "TUI" timeline text style. Colors are the terminal client's default opencode theme, resolved per mode. */
+:root[data-timeline-style="tui"] {
+  --tui-bg: #ffffff;
+  --tui-raised: #fafafa;
+  --tui-raised-hover: #f5f5f5;
+  --tui-text: #1a1a1a;
+  --tui-muted: #8a8a8a;
+  --tui-border: #b8b8b8;
+  --tui-agent: #7b5bb6;
+  --tui-error: #d1383d;
+  --tui-warning: #d68c27;
+  --tui-success: #3d9a57;
+  --tui-accent: #3b7dd8;
+}
+
+:root[data-timeline-style="tui"][data-color-scheme="dark"] {
+  --tui-bg: #0a0a0a;
+  --tui-raised: #141414;
+  --tui-raised-hover: #1e1e1e;
+  --tui-text: #eeeeee;
+  --tui-muted: #808080;
+  --tui-border: #484848;
+  --tui-agent: #5c9cf5;
+  --tui-error: #e06c75;
+  --tui-warning: #f5a742;
+  --tui-success: #7fd88f;
+  --tui-accent: #fab283;
+}
+
+:root[data-timeline-style="tui"] [data-slot="session-timeline-scroll"] {
+  --font-family-sans: var(--font-family-mono);
+  --v2-text-text-base: var(--tui-text);
+  --v2-text-text-strong: var(--tui-text);
+  --v2-text-text-muted: var(--tui-muted);
+  --v2-text-text-faint: var(--tui-muted);
+  --v2-text-text-weak: var(--tui-muted);
+  --v2-text-text-accent: var(--tui-accent);
+  --v2-border-border-base: var(--tui-border);
+  --v2-border-border-muted: var(--tui-border);
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  color: var(--tui-text);
+  background: var(--tui-bg);
+
+  /* Every row takes the terminal's single font and size; utility classes inside set their own, so this wins over them. */
+  * {
+    font-family: var(--font-family-mono) !important;
+    letter-spacing: 0;
+  }
+
+  [data-component="user-message"],
+  [data-component="text-part"],
+  [data-component="reasoning-part"],
+  [data-component="markdown"],
+  [data-component="tool-trigger"],
+  [data-component="tool-output"] {
+    font-size: 13px;
+  }
+
+  [data-component="markdown"] h1,
+  [data-component="markdown"] h2,
+  [data-component="markdown"] h3,
+  [data-component="markdown"] h4 {
+    font-size: 13px;
+    color: var(--tui-accent);
+  }
+
+  /* The user's prompt: a full-width raised block with the agent's color as a bar on its left, as the TUI draws it. */
+  [data-component="user-message"] {
+    align-items: stretch;
+
+    [data-slot="user-message-body"] {
+      width: 100%;
+      max-width: 100%;
+      margin-inline-start: 0;
+      align-items: stretch;
+    }
+
+    [data-slot="user-message-text"] {
+      display: block;
+      background: var(--tui-raised);
+      color: var(--tui-text);
+      border-radius: 0;
+      border-inline-start: 3px solid var(--tui-agent);
+      /* One blank line above and below, two columns after the bar. */
+      padding: 1lh 2ch;
+
+      &:hover {
+        background: var(--tui-raised-hover);
+      }
+    }
+
+    [data-slot="user-message-copy-wrapper"] {
+      align-self: flex-start;
+    }
+  }
+
+  /* The TUI indents everything the assistant writes by three columns. */
+  [data-component="text-part"],
+  [data-component="reasoning-part"],
+  [data-component="tool-part-wrapper"],
+  [data-component="tool-trigger"]:not([data-component="reasoning-part"] *, [data-component="tool-part-wrapper"] *) {
+    padding-inline-start: 3ch;
+  }
+
+  [data-component="reasoning-part"] {
+    color: var(--tui-muted);
+  }
+
+  /* Tool calls are muted single lines, as the TUI's inline tools. */
+  [data-component="tool-trigger"] {
+    color: var(--tui-muted);
+  }
+
+  [data-component="markdown"] :not(pre) > code {
+    background: transparent;
+    color: var(--tui-accent);
+  }
+
+  [data-component="markdown"] pre,
+  [data-component="markdown-code"] {
+    background: var(--tui-raised);
+    border-radius: 0;
+  }
+}

@@ -887,6 +887,10 @@ export const dict = {
   "settings.experimental.row.foldUserMessages.title": "Fold long messages",
   "settings.experimental.row.foldUserMessages.description":
     "Fold your messages past 12 lines behind a Read more button",
+  "settings.experimental.row.timelineStyle.title": "Timeline text",
+  "settings.experimental.row.timelineStyle.description": "Show the timeline in the app's style or the terminal's",
+  "settings.experimental.timelineStyle.desktop": "Desktop",
+  "settings.experimental.timelineStyle.tui": "TUI",
   "settings.experimental.row.newTimeline.title": "New timeline",
   "settings.experimental.row.newTimeline.description":
     "A redesigned session timeline that groups what the agent did, with one status line below the turn",

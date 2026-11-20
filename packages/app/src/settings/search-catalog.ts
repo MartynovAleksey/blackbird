@@ -119,6 +119,13 @@ export const clientSettings: Entry<SettingsRootTab>[] = [
   },
   {
     tab: "experimental",
+    label: "settings.experimental.row.timelineStyle.title",
+    target: "settings-timeline-style",
+    description: "settings.experimental.row.timelineStyle.description",
+    keywords: "timeline text style tui terminal monospace desktop",
+  },
+  {
+    tab: "experimental",
     label: "settings.experimental.row.newTimeline.title",
     target: "settings-new-timeline",
     description: "settings.experimental.row.newTimeline.description",

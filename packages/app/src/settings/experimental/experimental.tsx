@@ -66,6 +66,20 @@ export const SettingsExperimental: Component = () => {
               </div>
             </SettingsRow>
             <SettingsRow
+              title={language.t("settings.experimental.row.timelineStyle.title")}
+              description={language.t("settings.experimental.row.timelineStyle.description")}
+            >
+              <Select
+                data-action="settings-timeline-style"
+                options={["desktop", "tui"] as const}
+                current={settings.general.timelineStyle()}
+                label={(style) => language.t(`settings.experimental.timelineStyle.${style}`)}
+                onSelect={(style) => style && settings.general.setTimelineStyle(style)}
+                placement="bottom-end"
+                gutter={6}
+              />
+            </SettingsRow>
+            <SettingsRow
               title={language.t("settings.experimental.row.newTimeline.title")}
               description={language.t("settings.experimental.row.newTimeline.description")}
             >

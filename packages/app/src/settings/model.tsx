@@ -143,6 +143,8 @@ const generalSchema = Persistence.struct({
   newQuestionUI: Schema.Boolean,
   // The redesigned session timeline, off until it ships.
   newTimeline: Persistence.optional(Schema.Boolean),
+  // blackbird: "tui" draws the timeline's text in the terminal client's font and colors.
+  timelineStyle: Persistence.optional(Schema.Literals(["desktop", "tui"])),
   sidebarOrganize: Schema.Literals(["projects", "list", "customize", "recent"]),
   mobileTitlebarPosition: Schema.Literals(["top", "bottom"]),
   // Owned by the review plugin, which copies it out once; kept so settings rewrites cannot drop it first.
@@ -393,6 +395,12 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
 
     const timelineWidth = withFallback(() => store.general?.timelineWidth, defaultSettings.general.timelineWidth)
 
+    const timelineStyle = withFallback(() => store.general?.timelineStyle, "desktop")
+    createEffect(() => {
+      if (typeof document === "undefined") return
+      document.documentElement.dataset.timelineStyle = timelineStyle()
+    })
+
     const timelineCustomWidth = withFallback(() => store.general?.timelineCustomWidth, TIMELINE_CUSTOM_WIDTH_DEFAULT)
 
     // The session column's width token keys off this attribute, so every surface sharing it follows the setting.
@@ -454,6 +462,10 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
         foldUserMessages: withFallback(() => store.general?.foldUserMessages, defaultSettings.general.foldUserMessages),
         setFoldUserMessages(value: boolean) {
           setStore("general", "foldUserMessages", value)
+        },
+        timelineStyle,
+        setTimelineStyle(value: "desktop" | "tui") {
+          setStore("general", "timelineStyle", value)
         },
         newTimeline: withFallback(() => store.general?.newTimeline, false),
         setNewTimeline(value: boolean) {
