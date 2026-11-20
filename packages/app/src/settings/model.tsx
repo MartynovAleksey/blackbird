@@ -507,6 +507,8 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
         tabLayout: withFallback(() => store.appearance?.tabLayout, defaultSettings.appearance.tabLayout),
         setTabLayout(value: TabLayout) {
           setStore("appearance", "tabLayout", value)
+          // blackbird: Native starts grouped by project, as in Claude Code; the user can change it afterwards.
+          if (value === "native") setStore("general", "sidebarOrganize", "projects")
         },
         sidebarOpen: withFallback(() => store.appearance?.sidebarOpen, true),
         setSidebarOpen(value: boolean) {
