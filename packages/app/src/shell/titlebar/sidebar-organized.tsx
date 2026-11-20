@@ -29,7 +29,6 @@ import { ProjectIcon } from "@/shell/layout/project-icon"
 import { useLayout } from "@/shell/state/layout"
 import { createProjectSessionActions } from "@/shell/tabs/project-sessions"
 import { useTabs, type Tab } from "@/shell/tabs/tabs"
-import { useSettings } from "@/settings/model"
 import { addProjects } from "@/home/projects/add"
 import { homeProjectDirectories } from "@/shell/layout/helpers"
 import { useDirectoryPicker } from "@/workspaces/selection/picker"
@@ -86,9 +85,6 @@ export function SidebarOrganized(props: {
   const layout = useLayout()
   const global = useGlobal()
   const pickDirectory = useDirectoryPicker()
-  const settings = useSettings()
-  // blackbird: Native lists sessions only inside their projects, which start expanded, as in Claude Code.
-  const native = () => settings.appearance.tabLayout() === "native"
 
   createSidebarActivityListener()
 
@@ -184,18 +180,17 @@ export function SidebarOrganized(props: {
                 <ProjectList
                   currentTab={props.currentTab}
                   isOpenTab={isOpenTab}
-                  highlightActive={native() || projectSelected()}
+                  highlightActive={projectSelected()}
                   onSelect={(session) => setLocal("projectSession", session)}
                   state={state}
                   ready={ready()}
-                  expandedByDefault={native()}
-                  onExpand={(key) => setState("expanded", key, !(state.expanded[key] ?? native()))}
+                  onExpand={(key) => setState("expanded", key, (value) => !value)}
                   onReorder={(server, ids) => setState("order", server, ids)}
                 />
               </div>
             </Show>
           </section>
-          <div class="flex shrink-0 flex-col gap-3" classList={{ hidden: tabs.store.length === 0 || native() }}>
+          <div class="flex shrink-0 flex-col gap-3" classList={{ hidden: tabs.store.length === 0 }}>
             <Show when={!state.projectsCollapsed}>
               <div role="separator" class="mx-2 h-px shrink-0 bg-v2-border-border-muted" />
             </Show>
@@ -215,7 +210,6 @@ function ProjectList(props: {
   onSelect: (session: { server: ServerConnection.Key; sessionId: string }) => void
   state: typeof SidebarState.Type
   ready: boolean
-  expandedByDefault: boolean
   onExpand: (key: string) => void
   onReorder: (server: string, ids: string[]) => void
 }) {
@@ -337,7 +331,7 @@ function ProjectList(props: {
 
                 const limit = () => local.sessionLimits[key()] ?? 5
 
-                const expanded = () => props.state.expanded[key()] ?? props.expandedByDefault
+                const expanded = () => !!props.state.expanded[key()]
 
                 return (
                   <ProjectRow

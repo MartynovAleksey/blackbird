@@ -465,8 +465,6 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
         },
         sidebarOrganizeOptions,
         sidebarOrganize: createMemo(() => {
-          // blackbird: Native always groups by project; the saved choice comes back with the side tabs layout.
-          if (store.appearance?.tabLayout === "native") return "projects"
           const value = store.general?.sidebarOrganize
 
           return sidebarOrganizeOptions.includes(value) ? value : defaultSettings.general.sidebarOrganize
