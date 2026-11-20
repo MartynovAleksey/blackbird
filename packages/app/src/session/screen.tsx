@@ -24,6 +24,7 @@ import type { SessionModel } from "@/session/model"
 import { SESSION_PANEL_WIDTH_MIN } from "@/session/session-panel-width"
 import { useLayout } from "@/shell/state/layout"
 import { SessionPanelFrame } from "@/session/session-frame"
+import { SessionWidthHandles } from "@/session/session-width-handles"
 import { PluginLinks } from "@/runtime/plugin/render"
 import { createPanelSidebar, createRegion, MobilePanel } from "@/runtime/plugin/panels"
 import { createMobileViews, MobileViewTabs } from "@/runtime/plugin/mobile"
@@ -460,11 +461,7 @@ function SessionScreenContent(props: {
   return (
     <>
       <div class="flex-1 min-h-0 flex flex-col gap-2 px-[var(--shell-inline-inset,8px)] pb-[var(--shell-bottom-inset,8px)] pt-[var(--shell-top-inset,8px)]">
-        <div
-          ref={screen.panel.ref}
-          data-pane-row
-          class="relative flex-1 min-h-0 flex flex-col md:flex-row gap-2"
-        >
+        <div ref={screen.panel.ref} data-pane-row class="relative flex-1 min-h-0 flex flex-col md:flex-row gap-2">
           {/* Keep the control outside panel animations. */}
           <Show when={isDesktop() && messagesReady() && session.identity.params.id && !native()}>
             <div
@@ -496,6 +493,7 @@ function SessionScreenContent(props: {
             <Show when={!!session.identity.params.id}>
               <SessionPanelFrame raised>
                 <ErrorBoundary fallback={sessionErrorFallback}>{sessionPanelContent()}</ErrorBoundary>
+                <SessionWidthHandles />
               </SessionPanelFrame>
             </Show>
             <Show when={windowDragEnabled(platform)}>

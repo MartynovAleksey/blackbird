@@ -37,6 +37,9 @@ export function projectSettingsKey(scope: ServerScope, projectID: string | undef
   return projectID ? ScopedKey.from(scope, projectID) : undefined
 }
 
+/** The custom session column width before the user drags it: the "wide" preset's. */
+export const TIMELINE_CUSTOM_WIDTH_DEFAULT = 1000
+
 export const monoDefault = "IBM Plex Mono"
 
 export const sansDefault = "Inter"
@@ -129,7 +132,9 @@ const generalSchema = Persistence.struct({
   showCustomAgents: Schema.Boolean,
   showTurnDiffs: Schema.Boolean,
   backgroundActivity: Schema.Literals(["off", "left", "center", "right"]),
-  timelineWidth: Schema.Literals(["focused", "comfortable", "wide"]),
+  timelineWidth: Schema.Literals(["focused", "comfortable", "wide", "custom"]),
+  // The session column's width in px while `timelineWidth` is "custom", set by dragging the column's edges.
+  timelineCustomWidth: Persistence.optional(Schema.Number),
   // The "New icons" design experiment, off until it ships.
   newIcons: Schema.Boolean,
   // The "Fold long messages" experiment, off until it ships.
@@ -388,10 +393,16 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
 
     const timelineWidth = withFallback(() => store.general?.timelineWidth, defaultSettings.general.timelineWidth)
 
+    const timelineCustomWidth = withFallback(() => store.general?.timelineCustomWidth, TIMELINE_CUSTOM_WIDTH_DEFAULT)
+
     // The session column's width token keys off this attribute, so every surface sharing it follows the setting.
+    // A custom width sets the token itself, inline, over the presets' rules.
     createEffect(() => {
       if (typeof document === "undefined") return
-      document.documentElement.dataset.timelineWidth = timelineWidth()
+      const root = document.documentElement
+      root.dataset.timelineWidth = timelineWidth()
+      if (timelineWidth() === "custom") root.style.setProperty("--container-session", `${timelineCustomWidth()}px`)
+      else root.style.removeProperty("--container-session")
     })
 
     const autoApproveDefault = withFallback(
@@ -431,6 +442,10 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
         timelineWidth,
         setTimelineWidth(value: TimelineWidth) {
           setStore("general", "timelineWidth", value)
+        },
+        timelineCustomWidth,
+        setTimelineCustomWidth(value: number) {
+          setStore("general", "timelineCustomWidth", Math.round(value))
         },
         newIcons,
         setNewIcons(value: boolean) {

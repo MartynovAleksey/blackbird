@@ -174,12 +174,19 @@ const TimelineWidthSetting = () => {
     { value: "focused", label: language.t("settings.timeline.row.width.focused") },
     { value: "comfortable", label: language.t("settings.timeline.row.width.comfortable") },
     { value: "wide", label: language.t("settings.timeline.row.width.wide") },
+    { value: "custom", label: language.t("settings.timeline.row.width.custom") },
   ])
 
   return (
     <SettingsRow
       title={language.t("settings.timeline.row.width.title")}
-      description={language.t("settings.timeline.row.width.description")}
+      description={
+        settings.general.timelineWidth() === "custom"
+          ? language.t("settings.timeline.row.width.customDescription", {
+              width: String(settings.general.timelineCustomWidth()),
+            })
+          : language.t("settings.timeline.row.width.description")
+      }
     >
       <Select
         data-action="settings-timeline-width"

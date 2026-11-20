@@ -1087,6 +1087,8 @@ export const dict = {
   "settings.timeline.row.width.focused": "Focused",
   "settings.timeline.row.width.comfortable": "Comfortable",
   "settings.timeline.row.width.wide": "Wide",
+  "settings.timeline.row.width.custom": "Custom",
+  "settings.timeline.row.width.customDescription": "Drag the edges of a session's column to resize it. Now {{width}}px",
   "settings.timeline.detail": "Timeline detail",
   "settings.timeline.description": "Choose how much detail appears in the session timeline.",
   "settings.timeline.summary": "{{preset}}:",

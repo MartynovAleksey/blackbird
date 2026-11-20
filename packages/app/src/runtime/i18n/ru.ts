@@ -779,6 +779,13 @@ export const dict = {
   "settings.about.copyright": "© Anomaly Innovations, Inc.",
   "project.settings.title": "Редактировать проект",
   "settings.timeline.title": "Хронология",
+  "settings.timeline.row.width.title": "Ширина ленты",
+  "settings.timeline.row.width.description": "Узкие строки легче читать, широкие показывают больше",
+  "settings.timeline.row.width.focused": "Узкая",
+  "settings.timeline.row.width.comfortable": "Обычная",
+  "settings.timeline.row.width.wide": "Широкая",
+  "settings.timeline.row.width.custom": "Своя",
+  "settings.timeline.row.width.customDescription": "Тяните края колонки сессии, чтобы изменить ширину. Сейчас {{width}}px",
   "settings.timeline.detail": "Подробности временной шкалы",
   "settings.timeline.description":
     "Выберите, насколько активность будет отображаться на временной шкале. Сообщения остаются видимыми.",
