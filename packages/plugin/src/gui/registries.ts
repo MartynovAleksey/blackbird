@@ -890,6 +890,16 @@ export interface SlotMap {
     /** Whether the project menu is open. Subscribe to location data only while true. */
     readonly shown: boolean
   }
+  /**
+   * A full-width strip above the session's composer, under its pills. Not rendered in a subagent's session, which has
+   * no composer. Experimental: may change without compatibility guarantees.
+   */
+  readonly "experimental.session.composer": {
+    /** The composer's owning session screen; always present. */
+    readonly screen: SessionScreen
+    /** The routed session; a new object when another session is routed. */
+    readonly session: MountedSession
+  }
   /** The actions at the end of the side region's tab strip. */
   readonly "session.panel.end": {
     /** The owning session screen; always present. */

@@ -52,6 +52,7 @@ import { createSessionRequestModel } from "../requests/model"
 import type { Region } from "@/runtime/plugin/panels"
 import { SessionLocationMissing } from "./location-missing"
 import { SessionPluginPills } from "./plugin-pills"
+import { PluginSlot } from "@/runtime/plugin/render"
 import { createTimelineActions, type TimelineActionsView, type TimelinePendingActions } from "./timeline-actions"
 import type { MountedSession, SessionScreen } from "@opencode/plugin/gui"
 
@@ -599,6 +600,17 @@ export function ActiveSessionComposerRegion(props: {
           <SessionGoLimitTray
             sessionID={props.session.identity.params.id}
             selection={() => props.model.composer.model.selection}
+          />
+          <PluginSlot
+            at="experimental.session.composer"
+            input={{
+              get session() {
+                return props.view()
+              },
+              get screen() {
+                return props.screen
+              },
+            }}
           />
         </Show>
       }
