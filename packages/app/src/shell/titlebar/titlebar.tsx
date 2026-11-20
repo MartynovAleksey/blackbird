@@ -37,6 +37,7 @@ import { useSessionTabAvatarState } from "@/shell/layout/project-avatar-state"
 import { ActivityRing } from "@opencode/ui/activity-ring"
 import { RecentlyClosedTabsMenu } from "./recently-closed-tabs-menu"
 import { useSettingsDialog } from "@/settings/command"
+import { useSettingsSurface } from "@/settings/surface"
 import { TitlebarItems, useTitlebarItems } from "@/runtime/plugin/titlebar-items"
 import { createRouteTabSync } from "./route-sync"
 import {
@@ -78,6 +79,7 @@ export function Titlebar(props: { verticalTabs?: { mount?: HTMLElement } }) {
   const settings = useSettings()
 
   const openSettings = useSettingsDialog()
+  const settingsSurface = useSettingsSurface()
   const dialog = useDialog()
   const location = useLocation()
   const mobile = createMediaQuery("(max-width: 767px)")
@@ -843,7 +845,8 @@ export function Titlebar(props: { verticalTabs?: { mount?: HTMLElement } }) {
                                     data-titlebar-tab-action
                                     data-action="vertical-tabs-settings"
                                     class="flex h-7 w-full shrink-0 items-center gap-2 rounded-[6px] px-2 text-[13px] leading-4 text-v2-text-text-faint hover:text-v2-text-text-base"
-                                    onClick={() => openSettings()}
+                                    // A second click leaves settings, like Back to app.
+                                    onClick={() => (settingsSurface.active() ? settingsSurface.close() : openSettings())}
                                   >
                                     <Icon name="settings-gear" class="shrink-0" />
                                     <span class="min-w-0 truncate">{language.t("sidebar.settings")}</span>
