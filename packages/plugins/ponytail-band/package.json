@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "ponytail-band",
+  "version": "0.1.0",
+  "description": "ponytail's band for the blackbird desktop app: cost, tokens, agent time and tests above the composer",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    "./gui-experimental": "./dist/gui-experimental.cjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bun --bun vite build",
+    "test": "bun test",
+    "typecheck": "bun check --no-script",
+    "typecheck:tsc": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@opencode/plugin": "^2.0.27 || ^0.0.0-dev"
+  },
+  "devDependencies": {
+    "@opencode/client": "workspace:*",
+    "@opencode/plugin": "workspace:*",
+    "@tsconfig/node22": "catalog:",
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "@typescript/native": "catalog:",
+    "effect": "catalog:",
+    "solid-js": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-solid": "catalog:"
+  }
+}
